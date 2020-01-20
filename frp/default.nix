@@ -21,6 +21,8 @@ in stdenv.mkDerivation {
     mkdir -p $out
     cp -r \
       apresentação.html \
+      *.gif \
+      *.png \
       *.css \
       $out/
   '';
