@@ -1,0 +1,338 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="generator" content="pandoc">
+  <meta name="author" content="Thales Macedo Garitezi">
+  <title>Vôo de Pássaro: Functional Reactive Programming</title>
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, minimal-ui">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@3.8.0/css/reset.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@3.8.0/css/reveal.css">
+  <style>
+      code{white-space: pre-wrap;}
+      span.smallcaps{font-variant: small-caps;}
+      span.underline{text-decoration: underline;}
+      div.column{display: inline-block; vertical-align: top; width: 50%;}
+  </style>
+  <style>
+code.sourceCode > span { display: inline-block; line-height: 1.25; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode { white-space: pre; position: relative; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+code.sourceCode { white-space: pre-wrap; }
+code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+  </style>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@3.8.0/css/theme/black.css" id="theme">
+  <link rel="stylesheet" href="reveal_style.css"/>
+  <link rel="stylesheet" href="code_style.css"/>
+  <!-- Printing and PDF exports -->
+  <script>
+    var link = document.createElement( 'link' );
+    link.rel = 'stylesheet';
+    link.type = 'text/css';
+    link.href = window.location.search.match( /print-pdf/gi ) ? 'https://cdn.jsdelivr.net/npm/reveal.js@3.8.0/css/print/pdf.css' : 'https://cdn.jsdelivr.net/npm/reveal.js@3.8.0/css/print/paper.css';
+    document.getElementsByTagName( 'head' )[0].appendChild( link );
+  </script>
+  <!--[if lt IE 9]>
+  <script src="https://cdn.jsdelivr.net/npm/reveal.js@3.8.0/lib/js/html5shiv.js"></script>
+  <![endif]-->
+</head>
+<body>
+  <div class="reveal">
+    <div class="slides">
+
+<section id="title-slide">
+  <h1 class="title">Vôo de Pássaro: Functional Reactive Programming</h1>
+  <p class="author">Thales Macedo Garitezi</p>
+</section>
+
+<section><section id="o-que-é-frp" class="title-slide slide level1"><h1>O que é FRP?</h1><p><em>Um modelo para valores que dependem do tempo.</em></p></section><section id="criadores" class="slide level3">
+<h3>Criadores</h3>
+<p>Conal Elliott e Paul Hudak</p>
+<p><em>Functional Reactive Animation</em>, ICFP 97.</p>
+</section><section id="características" class="slide level3">
+<h3>Características</h3>
+<dl>
+<dt>Denotativa</dt>
+<dd>elementos ➡ significado
+</dd>
+<dt>Contínua</dt>
+<dd>implementação
+</dd>
+<dt>Declarativa</dt>
+<dd>o quê vs. como (ou modelo vs. apresentação)
+</dd>
+<dt>Pura</dt>
+<dd>estado (tempo) explícito
+</dd>
+<dt>Componível</dt>
+<dd>
+</dd>
+</dl>
+</section><section id="section" class="title-slide slide level2"><h2><br />
+</h2><figure>
+<img data-src="./ciclo.png" title="ciclo" alt="" /><figcaption>Ciclo de vida</figcaption>
+</figure>
+<p>Adaptado de <a href="https://www.youtube.com/watch?v=Agu6jipKfYw">Controlling Time and Space, Evan Czaplicki</a></p></section></section>
+<section id="usos" class="title-slide slide level1"><h1>Usos</h1><ul>
+<li>Música <a href="#/fn1" class="footnote-ref" id="fnref1" role="doc-noteref"><sup>1</sup></a> <a href="https://youtu.be/xtmo6Bmfahc?t=2994">(51:16)</a>.</li>
+<li>Interfaces gráficas <a href="#/fn2" class="footnote-ref" id="fnref2" role="doc-noteref"><sup>2</sup></a>.</li>
+<li>Robôs <a href="#/fn3" class="footnote-ref" id="fnref3" role="doc-noteref"><sup>3</sup></a>.</li>
+<li>Jogos <a href="#/fn4" class="footnote-ref" id="fnref4" role="doc-noteref"><sup>4</sup></a> <a href="#/fn5" class="footnote-ref" id="fnref5" role="doc-noteref"><sup>5</sup></a>. <a href="https://linearity.itch.io/peoplemon">Ex.</a></li>
+</ul></section>
+<section><section id="classificações" class="title-slide slide level1"><h1>Classificações</h1></section><section id="como-classificar---problema" class="slide level3">
+<h3>Como classificar - Problema</h3>
+<p>Contagem de cliques.</p>
+<ol>
+<li>Inicia o grafo com a contagem ligada.</li>
+<li>Clica 5 vezes.</li>
+<li>Muda o grafo de para ignorar cliques.</li>
+<li>Clica mais 5 vezes.</li>
+<li>Habilita novamente a contagem.</li>
+</ol>
+<p>N = 0, 5, 10 ??</p>
+</section><section id="motor-das-computações" class="title-slide slide level2"><h2>Motor das computações</h2><dl>
+<dt>Push</dt>
+<dd>Movido por dados. Eventos percorrem o grafo e produzem um valor conforme ocorrem.
+</dd>
+<dt>Pull</dt>
+<dd>Movido por demanda. Um valor é demandado e o grafo é percorrido até as fontes para computá-lo.
+</dd>
+<dt>Push/Pull</dt>
+<dd>"O melhor dos dois mundos". Eventos internos construídos apenas quando resultado demandado. <a href="#/fn6" class="footnote-ref" id="fnref6" role="doc-noteref"><sup>6</sup></a>
+</dd>
+</dl></section><section id="dinamicidade-do-grafo" class="title-slide slide level2"><h2>Dinamicidade do grafo</h2><ul>
+<li><em>Classic FRP ou First Order FRP</em></li>
+<li><em>Real-Time FRP e Event-Driven FRP</em></li>
+<li><em>Arrowized FRP</em></li>
+</ul></section><section id="classic-frp-ou-first-order-frp" class="slide level3">
+<h3>Classic FRP ou First Order FRP</h3>
+<p>Elementos básicos</p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb1-1"><a href="#cb1-1"></a><span class="co">-- | Comportamentos</span></span>
+<span id="cb1-2"><a href="#cb1-2"></a><span class="dt">Behavior</span> a <span class="ot">=</span> <span class="dt">Time</span> <span class="ot">-&gt;</span> a</span>
+<span id="cb1-3"><a href="#cb1-3"></a></span>
+<span id="cb1-4"><a href="#cb1-4"></a><span class="co">-- | Eventos</span></span>
+<span id="cb1-5"><a href="#cb1-5"></a><span class="dt">Event</span> a <span class="ot">=</span> [(<span class="dt">Time</span>, a)]</span></code></pre></div>
+<dl>
+<dt>Behaviors</dt>
+<dd>posição, velocidade, aceleração, …
+</dd>
+<dt>Eventos</dt>
+<dd>cliques, requests HTTP, …
+</dd>
+</dl>
+</section><section id="section-1" class="slide level3">
+<h3><br />
+</h3>
+<ul>
+<li>Behaviors/eventos são contínuos</li>
+<li>Behaviors/eventos infinitos</li>
+<li>Grafos estáticos</li>
+<li>Síncrono por padrão</li>
+<li>Pode levar a <em>space e time leaks</em></li>
+<li>Nós conectados ao mundo por padrão</li>
+</ul>
+</section><section id="real-time-frp-e-event-driven-frp" class="slide level3">
+<h3>Real-Time FRP e Event-Driven FRP</h3>
+<div class="sourceCode" id="cb2"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb2-1"><a href="#cb2-1"></a><span class="co">-- Equivalência entre eventos / comportamentos</span></span>
+<span id="cb2-2"><a href="#cb2-2"></a><span class="dt">Event</span> a <span class="op">~</span> <span class="dt">Behavior</span> (<span class="dt">Maybe</span> a)</span>
+<span id="cb2-3"><a href="#cb2-3"></a></span>
+<span id="cb2-4"><a href="#cb2-4"></a><span class="co">-- Tipo comum: Sinais</span></span>
+<span id="cb2-5"><a href="#cb2-5"></a><span class="dt">Signal</span> a <span class="ot">=</span> <span class="dt">Time</span> <span class="ot">-&gt;</span> a</span>
+<span id="cb2-6"><a href="#cb2-6"></a><span class="co">-- Event ~ Time -&gt; Maybe a</span></span></code></pre></div>
+<ul>
+<li>Busca resolver problemas de eficiência</li>
+<li>Custo em expressividade</li>
+<li>RT: usa uma linguagem irrestrita subjacente, uma restrita para lidar com sinais</li>
+<li>ED: não recomputa nada enquanto não houver um evento</li>
+</ul>
+</section><section id="arrowized-frp" class="slide level3">
+<h3>Arrowized FRP</h3>
+<ul>
+<li>Procura manter a expressividade do <em>Classical FRP</em> e evitar <em>space e time leaks</em></li>
+<li>Eventos não são mais usados</li>
+<li><em>Signal Functions</em>
+<ul>
+<li>Não são expostas diretamente para o programador</li>
+</ul></li>
+</ul>
+<div class="sourceCode" id="cb3"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb3-1"><a href="#cb3-1"></a><span class="co">-- Signal a = Time -&gt; a</span></span>
+<span id="cb3-2"><a href="#cb3-2"></a><span class="co">-- Event  a = Time -&gt; Maybe a</span></span>
+<span id="cb3-3"><a href="#cb3-3"></a></span>
+<span id="cb3-4"><a href="#cb3-4"></a><span class="dt">SF</span> a b <span class="ot">=</span> <span class="dt">Signal</span> a <span class="ot">-&gt;</span> <span class="dt">Signal</span> b</span></code></pre></div>
+</section><section id="section-2" class="slide level3">
+<h3><br />
+</h3>
+<ul>
+<li>Sinais são contínuos</li>
+<li>Sinais infinitos</li>
+<li><del>Sinais são estáticos</del></li>
+<li>Síncrono por padrão</li>
+<li><del>Nós conectados ao mundo por padrão</del></li>
+</ul>
+</section></section>
+<section><section id="exemplos" class="title-slide slide level1"><h1>Exemplos</h1><p><a href="https://github.com/gelisam/frp-zoo">https://github.com/gelisam/frp-zoo</a></p>
+<ul>
+<li><strong>Haskell</strong>: artery, auto, DysFRP, elerea, euphoria, FRPNow, grapefruit, machinecell, netwire, varying, ordrea, reactive-bacon, reactive-banana, reflex, Yampa, sodium</li>
+<li><strong>Clojure(script)</strong>: recurrent, reagi, zelkova, re-frame</li>
+<li><strong>JavaScript</strong>: Bacon.js, ReactiveCocoa, Reactive Extensions, Rx.js, Cycle.js</li>
+</ul></section><section id="netwire" class="title-slide slide level2"><h2>Netwire</h2><p><em>Arrowized, continuous, push-based</em></p>
+<p><a href="http://hackage.haskell.org/package/netwire">http://hackage.haskell.org/package/netwire</a></p>
+<p><a href="https://github.com/esoeylemez/netwire">https://github.com/esoeylemez/netwire</a></p></section><section id="ertugrul-söylemez" class="title-slide slide level2"><h2>Ertugrul Söylemez</h2><p>22/09/1985 🟊</p>
+<p>12/05/2018 ✝ <a href="#/fn7" class="footnote-ref" id="fnref7" role="doc-noteref"><sup>7</sup></a></p>
+<p>Último release da <code>netwire</code>: 25/03/2018</p></section><section id="experimentos-movimentos-com-aceleração-constante-em-2d" class="title-slide slide level2"><h2>Experimentos: movimentos com aceleração constante em 2D</h2></section><section id="section-3" class="title-slide slide level2"><h2><br />
+</h2><span class="math display">\[\begin{equation}
+\vec{a}(t) = \vec{a_0} \\
+
+\vec{v}(t) = \vec{v_0} + \vec{a} t \\
+
+\vec{s}(t) = \vec{s_0} + \vec{v_0} t + \frac{\vec{a_0} t^2}{2}
+\end{equation}
+\]</span></section><section id="section-4" class="title-slide slide level2"><h2><br />
+</h2><span class="math display">\[\begin{equation}
+\vec{s}(t) = \vec{s}(t_0) + \int_{t_0}^t \vec{v}(t) dt \\
+
+\vec{v}(t) = \vec{v}(t_0) + \int_{t_0}^t \vec{a}(t) dt
+\end{equation}
+\]</span></section><section id="section-5" class="title-slide slide level2"><h2><br />
+</h2><div class="sourceCode" id="cb4"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb4-1"><a href="#cb4-1"></a>position <span class="ot">=</span> proc (vx, vy) <span class="ot">-&gt;</span> <span class="kw">do</span></span>
+<span id="cb4-2"><a href="#cb4-2"></a>  sx <span class="ot">&lt;-</span> integral <span class="dv">0</span> <span class="op">-&lt;</span> vx</span>
+<span id="cb4-3"><a href="#cb4-3"></a>  sy <span class="ot">&lt;-</span> integral <span class="dv">0</span> <span class="op">-&lt;</span> vy</span>
+<span id="cb4-4"><a href="#cb4-4"></a>  returnA <span class="op">-&lt;</span> (sx, sy)</span>
+<span id="cb4-5"><a href="#cb4-5"></a></span>
+<span id="cb4-6"><a href="#cb4-6"></a>velocity <span class="ot">=</span> proc (ax, ay) <span class="ot">-&gt;</span> <span class="kw">do</span></span>
+<span id="cb4-7"><a href="#cb4-7"></a>  vx <span class="ot">&lt;-</span> integral vx0 <span class="op">-&lt;</span> ax</span>
+<span id="cb4-8"><a href="#cb4-8"></a>  vy <span class="ot">&lt;-</span> integral vy0 <span class="op">-&lt;</span> ay</span>
+<span id="cb4-9"><a href="#cb4-9"></a>  returnA <span class="op">-&lt;</span> (vx, vy)</span></code></pre></div></section><section id="velocidade-constante" class="title-slide slide level2"><h2>Velocidade constante</h2><p><img data-src="./mru1.gif" /></p></section><section id="velocidade-constante-1" class="title-slide slide level2"><h2>Velocidade constante</h2><p><img data-src="./mru2.gif" /></p></section><section id="aceleração" class="title-slide slide level2"><h2>Aceleração</h2><p><img data-src="./acel1.gif" /></p></section><section id="input-de-teclado-colisões-e-atrito" class="title-slide slide level2"><h2>Input de teclado, colisões e atrito</h2><span class="math display">\[\begin{equation}
+\vec{a}(t) = \vec{a_0} - \alpha \vec{v}(t) \\
+
+0 &lt; \alpha &lt; 1
+\end{equation}
+\]</span>
+<p><a href="https://github.com/thalesmg/test-haskell-netwire-sdl2">https://github.com/thalesmg/test-haskell-netwire-sdl2</a></p></section></section>
+<section id="referências" class="title-slide slide level1"><h1>Referências</h1><ul>
+<li>FRP segundo Conal Elliott: <a href="https://stackoverflow.com/a/1030631/2708711">https://stackoverflow.com/a/1030631/2708711</a></li>
+<li>Paper sobre Arrowized FRP: <a href="http://www.cs.yale.edu/homes/hudak/CS429F04/AFPLectureNotes.pdf">http://www.cs.yale.edu/homes/hudak/CS429F04/AFPLectureNotes.pdf</a></li>
+<li>Tese do Evan Czaplicki: <a href="https://elm-lang.org/assets/papers/concurrent-frp.pdf">https://elm-lang.org/assets/papers/concurrent-frp.pdf</a></li>
+<li>Zoológico de bibliotecas FRP: <a href="https://github.com/gelisam/frp-zoo">https://github.com/gelisam/frp-zoo</a></li>
+<li>Functional Reactive Programming: <a href="https://www.manning.com/books/functional-reactive-programming">https://www.manning.com/books/functional-reactive-programming</a></li>
+</ul></section>
+<section id="tufe" class="title-slide slide level1"><h1>Tufe</h1><p>🍺</p></section>
+<section><section id="apêndice" class="title-slide slide level1"><h1>Apêndice</h1></section><section id="frp-vs.-csp" class="title-slide slide level2"><h2>FRP vs. CSP</h2><p>São duas abstrações para descrever sistemas dinâmicos / concorrência.</p>
+<p>CSP é um formalismo para descrever sistemas concorrentes cujos processos que o compõem interagem através de eventos de comunicação.<a href="#/fn8" class="footnote-ref" id="fnref8" role="doc-noteref"><sup>8</sup></a></p></section><section id="section-6" class="slide level3">
+<h3><br />
+</h3>
+<p>Enquanto FRP descreve <em>comportamentos e eventos</em> que dependem diretamente do tempo e primitivas para combiná-los em novos <em>comportamentos</em>, CSP descreve o <em>alfabeto</em> que <em>processos</em> podem usar para comunicar-se entre si e com o ambiente.</p>
+</section></section>
+<section class="footnotes" role="doc-endnotes">
+<hr />
+<ol>
+<li id="fn1" role="doc-endnote"><p><a href="https://youtu.be/xtmo6Bmfahc?t=2994">https://youtu.be/xtmo6Bmfahc?t=2994</a><a href="#/fnref1" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn2" role="doc-endnote"><p><a href="https://reflex-frp.org/">https://reflex-frp.org/</a><a href="#/fnref2" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn3" role="doc-endnote"><p><a href="https://link.springer.com/chapter/10.1007/978-3-540-44833-4_6">https://link.springer.com/chapter/10.1007/978-3-540-44833-4_6</a> e <a href="http://www.cs.yale.edu/homes/hudak/CS429F04/AFPLectureNotes.pdf">http://www.cs.yale.edu/homes/hudak/CS429F04/AFPLectureNotes.pdf</a><a href="#/fnref3" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn4" role="doc-endnote"><p><a href="https://leanpub.com/gameinhaskell">https://leanpub.com/gameinhaskell</a><a href="#/fnref4" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn5" role="doc-endnote"><p><a href="https://linearity.itch.io/peoplemon">https://linearity.itch.io/peoplemon</a><a href="#/fnref5" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn6" role="doc-endnote"><p><a href="https://en.wikipedia.org/wiki/Functional_reactive_programming#Implementation_issues">https://en.wikipedia.org/wiki/Functional_reactive_programming#Implementation_issues</a>, acessado em 12/09/2019.<a href="#/fnref6" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn7" role="doc-endnote"><p><a href="https://byorgey.wordpress.com/2018/05/21/ertugrul-soylemez-1985-2018/">https://byorgey.wordpress.com/2018/05/21/ertugrul-soylemez-1985-2018/</a><a href="#/fnref7" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn8" role="doc-endnote"><p>The theory and practice of concurrency. A. W. Roscoe, 1998.<a href="#/fnref8" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+</ol>
+</section>
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/reveal.js@3.8.0/js/reveal.js"></script>
+
+  <script>
+
+      // Full list of configuration options available at:
+      // https://github.com/hakimel/reveal.js#configuration
+      Reveal.initialize({
+        // Push each slide change to the browser history
+        history: true,
+        math: {
+          mathjax: 'https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.2/MathJax.js',
+          config: 'TeX-AMS_HTML-full',
+          tex2jax: {
+            inlineMath: [['\\(','\\)']],
+            displayMath: [['\\[','\\]']],
+            balanceBraces: true,
+            processEscapes: false,
+            processRefs: true,
+            processEnvironments: true,
+            preview: 'TeX',
+            skipTags: ['script','noscript','style','textarea','pre','code'],
+            ignoreClass: 'tex2jax_ignore',
+            processClass: 'tex2jax_process'
+          },
+        },
+
+        // Optional reveal.js plugins
+        dependencies: [
+          { src: 'https://cdn.jsdelivr.net/npm/reveal.js@3.8.0/lib/js/classList.js', condition: function() { return !document.body.classList; } },
+          { src: 'https://cdn.jsdelivr.net/npm/reveal.js@3.8.0/plugin/zoom-js/zoom.js', async: true },
+          { src: 'https://cdn.jsdelivr.net/npm/reveal.js@3.8.0/plugin/math/math.js', async: true },
+          { src: 'https://cdn.jsdelivr.net/npm/reveal.js@3.8.0/plugin/notes/notes.js', async: true }
+        ]
+      });
+    </script>
+    </body>
+</html>
