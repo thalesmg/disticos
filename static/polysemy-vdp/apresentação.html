@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="generator" content="pandoc">
+  <meta name="author" content="Thales Macedo Garitezi">
+  <title>Vôo de Pássaro: Polysemy, um Sistema de Efeitos</title>
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, minimal-ui">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@3.8.0/css/reset.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@3.8.0/css/reveal.css">
+  <style>
+      code{white-space: pre-wrap;}
+      span.smallcaps{font-variant: small-caps;}
+      span.underline{text-decoration: underline;}
+      div.column{display: inline-block; vertical-align: top; width: 50%;}
+  </style>
+  <style>
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+  </style>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@3.8.0/css/theme/black.css" id="theme">
+  <link rel="stylesheet" href="style.css"/>
+  <link rel="stylesheet" href="code_style.css"/>
+  <!-- Printing and PDF exports -->
+  <script>
+    var link = document.createElement( 'link' );
+    link.rel = 'stylesheet';
+    link.type = 'text/css';
+    link.href = window.location.search.match( /print-pdf/gi ) ? 'https://cdn.jsdelivr.net/npm/reveal.js@3.8.0/css/print/pdf.css' : 'https://cdn.jsdelivr.net/npm/reveal.js@3.8.0/css/print/paper.css';
+    document.getElementsByTagName( 'head' )[0].appendChild( link );
+  </script>
+  <!--[if lt IE 9]>
+  <script src="https://cdn.jsdelivr.net/npm/reveal.js@3.8.0/lib/js/html5shiv.js"></script>
+  <![endif]-->
+</head>
+<body>
+  <div class="reveal">
+    <div class="slides">
+
+<section id="title-slide">
+  <h1 class="title">Vôo de Pássaro: Polysemy, um Sistema de Efeitos</h1>
+  <p class="author">Thales Macedo Garitezi</p>
+</section>
+
+<section><section id="sistemas-de-efeitos" class="title-slide slide level1"><h1>Sistemas de efeitos</h1></section><section id="o-que-são-efeitos" class="title-slide slide level2"><h2>O que são efeitos?</h2><dl>
+<dt>Contexto</dt>
+<dd>programação funcional.
+</dd>
+<dt>Expressão Pura</dt>
+<dd>transparência referencial.
+</dd>
+<dt>Efeito</dt>
+<dd>modifica o estado do "mundo"
+</dd>
+</dl>
+<figure>
+<img data-src="./images/st_monad_1.png" title="st_monad_1" alt="" />
+</figure>
+<figure>
+<img data-src="./images/st_monad_2.png" title="st_monad_2" alt="" />
+</figure></section><section id="exemplos-de-efeitos" class="title-slide slide level2"><h2>Exemplos de efeitos</h2><ul>
+<li>Ler/escrever no terminal</li>
+<li>Log</li>
+<li>Exceções</li>
+<li>Continuações/alterar fluxo de execução</li>
+</ul></section><section id="sistema-de-efeitos" class="title-slide slide level2"><h2>Sistema de efeitos?</h2><ul>
+<li>Uma maneira de lidar com efeitos computacionais (<em>efeitos impuros</em>)</li>
+<li>Baseada na premissa de que a impureza advém de um conjunto de operações
+<ul>
+<li>Ex: <code>get</code>, <code>set</code>, <code>write</code>, <code>raise</code> <a href="#/fn1" class="footnote-ref" id="fnref1" role="doc-noteref"><sup>1</sup></a></li>
+</ul></li>
+<li>Também: <em>algebraic effects</em> ou <em>extensible effects</em>.<a href="#/fn2" class="footnote-ref" id="fnref2" role="doc-noteref"><sup>2</sup></a> <a href="#/fn3" class="footnote-ref" id="fnref3" role="doc-noteref"><sup>3</sup></a></li>
+</ul></section><section id="para-quê" class="title-slide slide level2"><h2>Para quê?</h2><ul>
+<li>Controle de efeitos colaterais.</li>
+<li>Separa as ações a serem feitas (<em>sintaxe</em>) da interpretação (<em>semântica</em>).
+<ul>
+<li>Facilita testes unitários.</li>
+<li>Desejável: fácil composição.</li>
+</ul></li>
+<li>Tipos: controle de quais efeitos são permitidos e tratados.</li>
+</ul></section></section>
+<section><section id="efeitos-tradicionais-em-haskell" class="title-slide slide level1"><h1>"Efeitos tradicionais" em Haskell</h1><div class="sourceCode" id="cb1"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb1-1"><a href="#cb1-1"></a><span class="kw">data</span> <span class="dt">Maybe</span> a <span class="ot">=</span> <span class="dt">Just</span> a <span class="op">|</span> <span class="dt">Nothing</span> <span class="co">-- Exceções / nulo</span></span>
+<span id="cb1-2"><a href="#cb1-2"></a><span class="kw">data</span> <span class="dt">Either</span> e a <span class="ot">=</span> <span class="dt">Left</span> e <span class="op">|</span> <span class="dt">Right</span> a <span class="co">-- Exceções com &quot;mensagens&quot;</span></span>
+<span id="cb1-3"><a href="#cb1-3"></a><span class="kw">data</span> <span class="dt">List</span> a <span class="ot">=</span> <span class="dt">Nil</span> <span class="op">|</span> <span class="dt">Cons</span> a (<span class="dt">List</span> a) <span class="co">-- Não determinismo</span></span>
+<span id="cb1-4"><a href="#cb1-4"></a></span>
+<span id="cb1-5"><a href="#cb1-5"></a><span class="co">-- Outros exemplos: estado, log, variáveis de ambiente, ...</span></span></code></pre></div></section><section id="como-compõem" class="title-slide slide level2"><h2>Como compõem?</h2><p><em>Monad transformers</em></p>
+<div class="sourceCode" id="cb2"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb2-1"><a href="#cb2-1"></a><span class="co">-- Estado + Variáveis de ambiente somente leitura + exceções</span></span>
+<span id="cb2-2"><a href="#cb2-2"></a><span class="dt">ExceptT</span> <span class="dt">MyError</span> (<span class="dt">ReaderT</span> <span class="dt">MyEnvironment</span> (<span class="dt">StateT</span> <span class="dt">MyState</span> <span class="dt">IO</span>)) a</span></code></pre></div>
+<p>Funcionamento depende fortemente da ordem de composição.</p>
+<div class="sourceCode" id="cb3"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb3-1"><a href="#cb3-1"></a><span class="kw">newtype</span> <span class="dt">ExceptT</span> e m a <span class="co">-- ~&gt; m (Either e a)</span></span>
+<span id="cb3-2"><a href="#cb3-2"></a><span class="kw">newtype</span> <span class="dt">StateT</span> s m a <span class="co">-- ~&gt;  s -&gt; m (a, s)</span></span>
+<span id="cb3-3"><a href="#cb3-3"></a></span>
+<span id="cb3-4"><a href="#cb3-4"></a><span class="dt">ExceptT</span> e (<span class="dt">StateT</span> s m) a <span class="co">-- Mantém o estado no caso de exceção</span></span>
+<span id="cb3-5"><a href="#cb3-5"></a><span class="co">-- ~ s -&gt; m ((Either e a), s)</span></span>
+<span id="cb3-6"><a href="#cb3-6"></a></span>
+<span id="cb3-7"><a href="#cb3-7"></a><span class="dt">StateT</span> s (<span class="dt">ExceptT</span> e m) a <span class="co">-- Joga tudo fora se houver uma exceção</span></span>
+<span id="cb3-8"><a href="#cb3-8"></a><span class="co">-- ~ s -&gt; m (Either e (a, s))</span></span></code></pre></div>
+<p>Vide <a href="./src/ExMTL.hs">./src/ExMTL.hs</a></p>
+<ul>
+<li>Existe também o estilo MTL (<em>Monad Transformer Library</em>)</li>
+<li>Usa <em>Typeclasses</em></li>
+<li>Problema: número grande de re-implementações de classes para cada monad novo que usa.</li>
+</ul>
+<p>Outros problemas:</p>
+<ul>
+<li>Dificuldade em testar.
+<ul>
+<li>Precisa implementar mais várias instâncias para emular os efeitos…</li>
+</ul></li>
+<li>Dificuldade / impossibilidade de usar múltiplas instâncias do mesmo efeito (múltiplos ambientes somente leitura, exceções, …)</li>
+</ul></section></section>
+<section><section id="sistema-de-efeitos-1" class="title-slide slide level1"><h1>Sistema de efeitos</h1><ul>
+<li>Costumam ser implementados como bibliotecas.</li>
+<li>Algumas linguagens têm foco em efeitos algebraicos.
+<ul>
+<li>Ex: Koka<a href="#/fn4" class="footnote-ref" id="fnref4" role="doc-noteref"><sup>4</sup></a>, Eff<a href="#/fn5" class="footnote-ref" id="fnref5" role="doc-noteref"><sup>5</sup></a>, OCaml (?)<a href="#/fn6" class="footnote-ref" id="fnref6" role="doc-noteref"><sup>6</sup></a></li>
+</ul></li>
+</ul></section><section id="pseudo-exemplo-ações" class="title-slide slide level2"><h2>(Pseudo-)Exemplo: Ações</h2><div class="sourceCode" id="cb4"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb4-1"><a href="#cb4-1"></a><span class="ot">example ::</span> <span class="dt">Members</span> &#39;[ <span class="dt">Log</span> <span class="dt">String</span></span>
+<span id="cb4-2"><a href="#cb4-2"></a>                    , <span class="dt">KVStore</span></span>
+<span id="cb4-3"><a href="#cb4-3"></a>                    , <span class="dt">Output</span> <span class="dt">String</span></span>
+<span id="cb4-4"><a href="#cb4-4"></a>                    , <span class="dt">Input</span> <span class="dt">String</span></span>
+<span id="cb4-5"><a href="#cb4-5"></a>                    ]</span>
+<span id="cb4-6"><a href="#cb4-6"></a>                    r <span class="co">-- Pode conter mais efeitos</span></span>
+<span id="cb4-7"><a href="#cb4-7"></a>        <span class="ot">=&gt;</span> <span class="dt">Sem</span> r ()</span>
+<span id="cb4-8"><a href="#cb4-8"></a>example <span class="ot">=</span> <span class="kw">do</span></span>
+<span id="cb4-9"><a href="#cb4-9"></a>  <span class="fu">log</span> <span class="st">&quot;Starting up...&quot;</span></span>
+<span id="cb4-10"><a href="#cb4-10"></a>  writeTTY <span class="st">&quot;Please enter your name and age:&quot;</span></span>
+<span id="cb4-11"><a href="#cb4-11"></a>  [name, age] <span class="ot">&lt;-</span> <span class="fu">words</span> <span class="op">&lt;$&gt;</span> readTTY</span>
+<span id="cb4-12"><a href="#cb4-12"></a>  <span class="fu">log</span> <span class="st">&quot;Writing data to store...&quot;</span></span>
+<span id="cb4-13"><a href="#cb4-13"></a>  putKV name age</span>
+<span id="cb4-14"><a href="#cb4-14"></a>  writeTTY (<span class="st">&quot;Welcome, &quot;</span> <span class="op">&lt;&gt;</span> name <span class="op">&lt;&gt;</span> <span class="st">&quot;!&quot;</span>)</span></code></pre></div></section><section id="pseudo-exemplo-interpretações" class="title-slide slide level2"><h2>(Pseudo-)Exemplo: Interpretações</h2><div class="sourceCode" id="cb5"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb5-1"><a href="#cb5-1"></a><span class="ot">runInputList ::</span> [i]</span>
+<span id="cb5-2"><a href="#cb5-2"></a>             <span class="ot">-&gt;</span> <span class="dt">Sem</span> (<span class="dt">Input</span> (<span class="dt">Maybe</span> i) &#39;<span class="op">:</span> r) a</span>
+<span id="cb5-3"><a href="#cb5-3"></a>             <span class="ot">-&gt;</span> <span class="dt">Sem</span> r a</span>
+<span id="cb5-4"><a href="#cb5-4"></a><span class="ot">runOutputList ::</span> <span class="kw">forall</span> o r a<span class="op">.</span> <span class="dt">Sem</span> (<span class="dt">Output</span> o &#39;<span class="op">:</span> r) a</span>
+<span id="cb5-5"><a href="#cb5-5"></a>              <span class="ot">-&gt;</span> <span class="dt">Sem</span> r ([o], a)</span>
+<span id="cb5-6"><a href="#cb5-6"></a><span class="ot">runKVStoreMap ::</span> <span class="dt">Map</span> <span class="dt">String</span> <span class="dt">String</span></span>
+<span id="cb5-7"><a href="#cb5-7"></a>              <span class="ot">-&gt;</span> <span class="dt">Sem</span> (<span class="dt">Database</span> &#39;<span class="op">:</span> r)</span>
+<span id="cb5-8"><a href="#cb5-8"></a>              <span class="ot">-&gt;</span> <span class="dt">Sem</span> r (<span class="dt">Map</span> <span class="dt">String</span> <span class="dt">String</span>)</span>
+<span id="cb5-9"><a href="#cb5-9"></a><span class="op">...</span></span>
+<span id="cb5-10"><a href="#cb5-10"></a></span>
+<span id="cb5-11"><a href="#cb5-11"></a>runMyExamplePure inputs emptyMap</span>
+<span id="cb5-12"><a href="#cb5-12"></a>  <span class="ot">=</span> runInputList inputs</span>
+<span id="cb5-13"><a href="#cb5-13"></a>  <span class="op">.</span> runOutputList</span>
+<span id="cb5-14"><a href="#cb5-14"></a>  <span class="op">.</span> runKVStoreMap emptyMap</span>
+<span id="cb5-15"><a href="#cb5-15"></a>  <span class="op">...</span></span></code></pre></div></section></section>
+<section id="bibliotecas-de-efeitos-em-haskell" class="title-slide slide level1"><h1>Bibliotecas de Efeitos em Haskell</h1><ul>
+<li><code>fused-effects</code></li>
+<li><code>freer-simple</code></li>
+<li>Free Monads</li>
+</ul></section>
+<section><section id="polysemy" class="title-slide slide level1"><h1>Polysemy</h1><p><img data-src="./images/polysemy.png" title="img:polysemy_logo" /></p>
+<ul>
+<li><em>It's like mtl but composes better, requires less boilerplate, and avoids the O(n<sup>2</sup>) instances problem.</em></li>
+<li><em>It's like freer-simple but more powerful and 35x faster.</em></li>
+<li><em>It's like fused-effects but with an order of magnitude less boilerplate.</em></li>
+</ul>
+<p><em>Additionally, unlike mtl, polysemy has no functional dependencies, so you can use multiple copies of the same effect.</em></p>
+<p><a href="https://github.com/polysemy-research/polysemy">https://github.com/polysemy-research/polysemy</a></p></section><section id="exemplos" class="title-slide slide level2"><h2>Exemplos</h2><p><a href="./src/Ex1.hs">./src/Ex1.hs</a></p>
+<p><a href="./src/Ex2.hs">./src/Ex2.hs</a></p></section><section id="mais-um-exemplo" class="title-slide slide level2"><h2>Mais um exemplo</h2><p><a href="https://github.com/KerfuffleV2/haskell-polysemy-test/blob/3ba61c17f6ff8b91b2cf789deb87ec6e2884bcdb/src/example3/Main.hs">https://github.com/KerfuffleV2/haskell-polysemy-test/blob/3ba61c17f6ff8b91b2cf789deb87ec6e2884bcdb/src/example3/Main.hs</a></p></section></section>
+<section id="limitações" class="title-slide slide level1"><h1>Limitações</h1><ul>
+<li>Ainda não é o mais otimizado possível.</li>
+<li>Mais passes de otimização no Core.</li>
+<li>Precisará de:
+<ul>
+<li>GHC 8.10.1</li>
+<li>Precisa de <code>import Polysemy</code> nos arquivos que quiser otimizar.</li>
+<li>Flags do GHC: <code>-O2 -flate-specialize -fplugin=Polysemy.Plugin</code></li>
+</ul></li>
+</ul></section>
+<section id="tufe" class="title-slide slide level1"><h1>Tufe</h1><div class="CENTER">
+<p>🍺</p>
+</div></section>
+<section class="footnotes" role="doc-endnotes">
+<hr />
+<ol>
+<li id="fn1" role="doc-endnote"><p><a href="https://www.eff-lang.org/handlers-tutorial.pdf">https://www.eff-lang.org/handlers-tutorial.pdf</a><a href="#/fnref1" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn2" role="doc-endnote"><p><a href="http://hackage.haskell.org/package/fused-effects">http://hackage.haskell.org/package/fused-effects</a><a href="#/fnref2" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn3" role="doc-endnote"><p><a href="http://okmij.org/ftp/Haskell/extensible/exteff.pdf">http://okmij.org/ftp/Haskell/extensible/exteff.pdf</a><a href="#/fnref3" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn4" role="doc-endnote"><p><a href="https://www.eff-lang.org/">https://www.eff-lang.org/</a><a href="#/fnref4" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn5" role="doc-endnote"><p><a href="https://www.microsoft.com/en-us/research/project/koka/">https://www.microsoft.com/en-us/research/project/koka/</a><a href="#/fnref5" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn6" role="doc-endnote"><p><a href="https://github.com/ocaml-multicore/ocaml-multicore/wiki">https://github.com/ocaml-multicore/ocaml-multicore/wiki</a><a href="#/fnref6" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+</ol>
+</section>
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/reveal.js@3.8.0/js/reveal.js"></script>
+
+  <script>
+
+      // Full list of configuration options available at:
+      // https://github.com/hakimel/reveal.js#configuration
+      Reveal.initialize({
+        // Push each slide change to the browser history
+        history: true,
+        math: {
+          mathjax: 'https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.2/MathJax.js',
+          config: 'TeX-AMS_HTML-full',
+          tex2jax: {
+            inlineMath: [['\\(','\\)']],
+            displayMath: [['\\[','\\]']],
+            balanceBraces: true,
+            processEscapes: false,
+            processRefs: true,
+            processEnvironments: true,
+            preview: 'TeX',
+            skipTags: ['script','noscript','style','textarea','pre','code'],
+            ignoreClass: 'tex2jax_ignore',
+            processClass: 'tex2jax_process'
+          },
+        },
+
+        // Optional reveal.js plugins
+        dependencies: [
+          { src: 'https://cdn.jsdelivr.net/npm/reveal.js@3.8.0/lib/js/classList.js', condition: function() { return !document.body.classList; } },
+          { src: 'https://cdn.jsdelivr.net/npm/reveal.js@3.8.0/plugin/zoom-js/zoom.js', async: true },
+          { src: 'https://cdn.jsdelivr.net/npm/reveal.js@3.8.0/plugin/math/math.js', async: true },
+          { src: 'https://cdn.jsdelivr.net/npm/reveal.js@3.8.0/plugin/notes/notes.js', async: true }
+        ]
+      });
+    </script>
+    </body>
+</html>

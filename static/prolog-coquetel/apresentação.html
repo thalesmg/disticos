@@ -1,0 +1,336 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="generator" content="pandoc">
+  <meta name="author" content="Thales Macedo Garitezi">
+  <title>Resolvendo Desafios de Lógica da Coquetel com Prolog</title>
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, minimal-ui">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@3.8.0/css/reset.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@3.8.0/css/reveal.css">
+  <style>
+      code{white-space: pre-wrap;}
+      span.smallcaps{font-variant: small-caps;}
+      span.underline{text-decoration: underline;}
+      div.column{display: inline-block; vertical-align: top; width: 50%;}
+  </style>
+  <style>
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+  </style>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@3.8.0/css/theme/black.css" id="theme">
+  <link rel="stylesheet" href="reveal_style.css"/>
+  <link rel="stylesheet" href="code_style.css"/>
+  <!-- Printing and PDF exports -->
+  <script>
+    var link = document.createElement( 'link' );
+    link.rel = 'stylesheet';
+    link.type = 'text/css';
+    link.href = window.location.search.match( /print-pdf/gi ) ? 'https://cdn.jsdelivr.net/npm/reveal.js@3.8.0/css/print/pdf.css' : 'https://cdn.jsdelivr.net/npm/reveal.js@3.8.0/css/print/paper.css';
+    document.getElementsByTagName( 'head' )[0].appendChild( link );
+  </script>
+  <!--[if lt IE 9]>
+  <script src="https://cdn.jsdelivr.net/npm/reveal.js@3.8.0/lib/js/html5shiv.js"></script>
+  <![endif]-->
+</head>
+<body>
+  <div class="reveal">
+    <div class="slides">
+
+<section id="title-slide">
+  <h1 class="title">Resolvendo Desafios de Lógica da Coquetel com Prolog</h1>
+  <p class="author">Thales Macedo Garitezi</p>
+</section>
+
+<section><section id="prolog" class="title-slide slide level1"><h1>Prolog</h1><ul>
+<li>Programação baseada em regras e relações de lógica de primeira ordem.</li>
+<li>Uma das primeiras linguagens de programação. Criada em 1972 por Alain Colmerauer e Robert Kowalski<a href="#/fn1" class="footnote-ref" id="fnref1" role="doc-noteref"><sup>1</sup></a></li>
+<li>A primeira versão de Erlang foi escrita em Prolog.</li>
+</ul></section><section id="sintaxe" class="title-slide slide level2"><h2>Sintaxe</h2><p>Termos: átomos, números, variáveis e termos compostos.</p></section><section id="átomos" class="slide level3">
+<h3>Átomos:</h3>
+<div class="sourceCode" id="cb1"><pre class="sourceCode prolog"><code class="sourceCode prolog"><span id="cb1-1"><a href="#cb1-1"></a>x</span>
+<span id="cb1-2"><a href="#cb1-2"></a>mortal</span>
+<span id="cb1-3"><a href="#cb1-3"></a><span class="st">&#39;</span><span class="er">Socrates</span><span class="st">&#39;</span></span></code></pre></div>
+</section><section id="números" class="slide level3">
+<h3>Números:</h3>
+<div class="sourceCode" id="cb2"><pre class="sourceCode prolog"><code class="sourceCode prolog"><span id="cb2-1"><a href="#cb2-1"></a><span class="dv">1</span></span>
+<span id="cb2-2"><a href="#cb2-2"></a><span class="fl">3.1415</span></span></code></pre></div>
+</section><section id="variáveis" class="slide level3">
+<h3>Variáveis:</h3>
+<div class="sourceCode" id="cb3"><pre class="sourceCode prolog"><code class="sourceCode prolog"><span id="cb3-1"><a href="#cb3-1"></a><span class="dt">Xs</span></span>
+<span id="cb3-2"><a href="#cb3-2"></a><span class="dt">NQ</span></span>
+<span id="cb3-3"><a href="#cb3-3"></a><span class="dt">_NaoUsado</span></span>
+<span id="cb3-4"><a href="#cb3-4"></a><span class="dt">_</span></span></code></pre></div>
+</section><section id="termos-compostos" class="slide level3">
+<h3>Termos compostos:</h3>
+<div class="sourceCode" id="cb4"><pre class="sourceCode prolog"><code class="sourceCode prolog"><span id="cb4-1"><a href="#cb4-1"></a>[<span class="dv">1</span>,<span class="dv">2</span>,x,<span class="dt">Xs</span>]</span>
+<span id="cb4-2"><a href="#cb4-2"></a><span class="ot">&quot;</span><span class="er">uma</span><span class="al"> </span><span class="er">string</span><span class="al"> </span><span class="er">marota</span><span class="ot">&quot;</span></span></code></pre></div>
+</section><section id="termos-aninhados" class="slide level3">
+<h3>Termos aninhados</h3>
+<div class="sourceCode" id="cb5"><pre class="sourceCode prolog"><code class="sourceCode prolog"><span id="cb5-1"><a href="#cb5-1"></a>make_date(<span class="dt">Y</span><span class="kw">,</span><span class="dt">M</span><span class="kw">,</span><span class="dt">D</span><span class="kw">,</span>date(<span class="dt">Y</span><span class="kw">,</span><span class="dt">M</span><span class="kw">,</span><span class="dt">D</span>))<span class="kw">.</span></span>
+<span id="cb5-2"><a href="#cb5-2"></a></span>
+<span id="cb5-3"><a href="#cb5-3"></a>get_year(date(<span class="dt">Y</span><span class="kw">,</span><span class="dt">_</span><span class="kw">,</span><span class="dt">_</span>)<span class="kw">,</span><span class="dt">Y</span>)<span class="kw">.</span></span>
+<span id="cb5-4"><a href="#cb5-4"></a>get_month(date(<span class="dt">_</span><span class="kw">,</span><span class="dt">M</span><span class="kw">,</span><span class="dt">_</span>)<span class="kw">,</span><span class="dt">M</span>)<span class="kw">.</span></span>
+<span id="cb5-5"><a href="#cb5-5"></a>get_day(date(<span class="dt">_</span><span class="kw">,</span><span class="dt">_</span><span class="kw">,</span><span class="dt">D</span>)<span class="kw">,</span><span class="dt">D</span>)<span class="kw">.</span></span></code></pre></div>
+</section></section>
+<section><section id="regras-e-fatos" class="title-slide slide level1"><h1>Regras e Fatos</h1></section><section id="fatos" class="title-slide slide level2"><h2>Fatos</h2><div class="sourceCode" id="cb6"><pre class="sourceCode prolog"><code class="sourceCode prolog"><span id="cb6-1"><a href="#cb6-1"></a>cat(tom)<span class="kw">.</span></span>
+<span id="cb6-2"><a href="#cb6-2"></a></span>
+<span id="cb6-3"><a href="#cb6-3"></a><span class="co">%% equivalente a:</span></span>
+<span id="cb6-4"><a href="#cb6-4"></a></span>
+<span id="cb6-5"><a href="#cb6-5"></a><span class="co">%% true/0</span></span>
+<span id="cb6-6"><a href="#cb6-6"></a>cat(tom) <span class="kw">:-</span> <span class="kw">true.</span></span></code></pre></div></section><section id="regras" class="title-slide slide level2"><h2>Regras</h2><div class="sourceCode" id="cb7"><pre class="sourceCode prolog"><code class="sourceCode prolog"><span id="cb7-1"><a href="#cb7-1"></a>mortal(<span class="dt">X</span>) <span class="kw">:-</span> man(<span class="dt">X</span>)<span class="kw">.</span></span>
+<span id="cb7-2"><a href="#cb7-2"></a>man(socrates)<span class="kw">.</span></span>
+<span id="cb7-3"><a href="#cb7-3"></a>man(aristoteles)<span class="kw">.</span></span>
+<span id="cb7-4"><a href="#cb7-4"></a></span>
+<span id="cb7-5"><a href="#cb7-5"></a><span class="fu">?-</span> mortal(socrates)<span class="kw">.</span></span>
+<span id="cb7-6"><a href="#cb7-6"></a><span class="kw">true.</span></span>
+<span id="cb7-7"><a href="#cb7-7"></a></span>
+<span id="cb7-8"><a href="#cb7-8"></a><span class="fu">?-</span> mortal(<span class="dt">X</span>)<span class="kw">.</span></span>
+<span id="cb7-9"><a href="#cb7-9"></a><span class="dt">X</span> <span class="kw">=</span> socrates <span class="kw">;</span></span>
+<span id="cb7-10"><a href="#cb7-10"></a><span class="dt">X</span> <span class="kw">=</span> aristoteles<span class="kw">.</span></span></code></pre></div>
+<div class="sourceCode" id="cb8"><pre class="sourceCode prolog"><code class="sourceCode prolog"><span id="cb8-1"><a href="#cb8-1"></a>bom(pastel)<span class="kw">.</span></span>
+<span id="cb8-2"><a href="#cb8-2"></a>bom(bigorna)<span class="kw">.</span></span>
+<span id="cb8-3"><a href="#cb8-3"></a>bom(vila_grana)<span class="kw">.</span></span>
+<span id="cb8-4"><a href="#cb8-4"></a>bom(coffee_lab)<span class="kw">.</span></span>
+<span id="cb8-5"><a href="#cb8-5"></a>bom(casa_da_esfiha)<span class="kw">.</span></span>
+<span id="cb8-6"><a href="#cb8-6"></a></span>
+<span id="cb8-7"><a href="#cb8-7"></a>barato(pastel)<span class="kw">.</span></span>
+<span id="cb8-8"><a href="#cb8-8"></a>barato(restobar)<span class="kw">.</span></span>
+<span id="cb8-9"><a href="#cb8-9"></a>barato(casa_da_esfiha)<span class="kw">.</span></span></code></pre></div>
+<div class="sourceCode" id="cb9"><pre class="sourceCode prolog"><code class="sourceCode prolog"><span id="cb9-1"><a href="#cb9-1"></a>lugar_para_comer(<span class="dt">R</span>) <span class="kw">:-</span> bom(<span class="dt">R</span>)<span class="kw">,</span> barato(<span class="dt">R</span>)<span class="kw">.</span></span>
+<span id="cb9-2"><a href="#cb9-2"></a></span>
+<span id="cb9-3"><a href="#cb9-3"></a><span class="fu">?-</span> lugar_para_comer(<span class="dt">R</span>)<span class="kw">.</span></span>
+<span id="cb9-4"><a href="#cb9-4"></a><span class="dt">R</span> <span class="kw">=</span> pastel <span class="kw">;</span></span>
+<span id="cb9-5"><a href="#cb9-5"></a><span class="dt">R</span> <span class="kw">=</span> casa_da_esfiha<span class="kw">.</span></span></code></pre></div></section><section id="disjunção" class="slide level3">
+<h3>Disjunção</h3>
+<div class="sourceCode" id="cb10"><pre class="sourceCode prolog"><code class="sourceCode prolog"><span id="cb10-1"><a href="#cb10-1"></a>type_of_character(<span class="dt">Ch</span><span class="kw">,</span> <span class="dt">Type</span>) <span class="kw">:-</span></span>
+<span id="cb10-2"><a href="#cb10-2"></a>  ( <span class="dt">Ch</span> <span class="dt">&gt;=</span> <span class="er">&quot;</span>a<span class="er">&quot;</span><span class="kw">,</span> <span class="dt">Ch</span> <span class="dt">=&lt;</span> <span class="er">&quot;</span>z<span class="er">&quot;</span> <span class="kw">-&gt;</span></span>
+<span id="cb10-3"><a href="#cb10-3"></a>      <span class="dt">Type</span> <span class="kw">=</span> lowercase</span>
+<span id="cb10-4"><a href="#cb10-4"></a>  <span class="kw">;</span> <span class="dt">Ch</span> <span class="dt">&gt;=</span> <span class="er">&quot;</span><span class="dt">A</span><span class="er">&quot;</span><span class="kw">,</span> <span class="dt">Ch</span> <span class="dt">=&lt;</span> <span class="er">&quot;</span><span class="dt">Z</span><span class="er">&quot;</span> <span class="kw">-&gt;</span></span>
+<span id="cb10-5"><a href="#cb10-5"></a>      <span class="dt">Type</span> <span class="kw">=</span> uppercase</span>
+<span id="cb10-6"><a href="#cb10-6"></a>  <span class="kw">;</span> <span class="dt">Ch</span> <span class="dt">&gt;=</span> <span class="er">&quot;</span><span class="dv">0</span><span class="er">&quot;</span><span class="kw">,</span> <span class="dt">Ch</span> <span class="dt">=&lt;</span> <span class="er">&quot;</span><span class="dv">9</span><span class="er">&quot;</span> <span class="kw">-&gt;</span></span>
+<span id="cb10-7"><a href="#cb10-7"></a>      <span class="dt">Type</span> <span class="kw">=</span> digit</span>
+<span id="cb10-8"><a href="#cb10-8"></a>  <span class="kw">;</span> otherwise <span class="kw">-&gt;</span></span>
+<span id="cb10-9"><a href="#cb10-9"></a>      <span class="dt">Type</span> <span class="kw">=</span> other</span>
+<span id="cb10-10"><a href="#cb10-10"></a>  )<span class="kw">.</span></span>
+<span id="cb10-11"><a href="#cb10-11"></a></span>
+<span id="cb10-12"><a href="#cb10-12"></a><span class="fu">?-</span> type_of_character(<span class="ot">&quot;0&quot;</span><span class="kw">,</span> <span class="dt">T</span>)<span class="kw">.</span></span>
+<span id="cb10-13"><a href="#cb10-13"></a><span class="dt">T</span> <span class="kw">=</span> digit<span class="kw">.</span></span></code></pre></div>
+</section></section>
+<section><section id="algumas-funções-úteis" class="title-slide slide level1"><h1>Algumas funções úteis</h1></section><section id="length" class="title-slide slide level2"><h2><code>length</code></h2><div class="sourceCode" id="cb11"><pre class="sourceCode prolog"><code class="sourceCode prolog"><span id="cb11-1"><a href="#cb11-1"></a><span class="fu">?-</span> length([<span class="dv">1</span>,<span class="dv">2</span>,<span class="dv">3</span>]<span class="kw">,</span> <span class="dt">L</span>)<span class="kw">.</span></span>
+<span id="cb11-2"><a href="#cb11-2"></a><span class="dt">L</span> <span class="kw">=</span> <span class="dv">3</span><span class="kw">.</span></span></code></pre></div></section><section id="dif" class="title-slide slide level2"><h2><code>dif</code></h2><div class="sourceCode" id="cb12"><pre class="sourceCode prolog"><code class="sourceCode prolog"><span id="cb12-1"><a href="#cb12-1"></a><span class="fu">?-</span> dif(a<span class="kw">,</span>b)<span class="kw">.</span></span>
+<span id="cb12-2"><a href="#cb12-2"></a><span class="kw">true.</span></span>
+<span id="cb12-3"><a href="#cb12-3"></a></span>
+<span id="cb12-4"><a href="#cb12-4"></a><span class="fu">?-</span> dif(a<span class="kw">,</span>a)<span class="kw">.</span></span>
+<span id="cb12-5"><a href="#cb12-5"></a><span class="kw">false.</span></span>
+<span id="cb12-6"><a href="#cb12-6"></a></span>
+<span id="cb12-7"><a href="#cb12-7"></a><span class="fu">?-</span> dif(<span class="dt">X</span><span class="kw">,</span> socrates)<span class="kw">,</span></span>
+<span id="cb12-8"><a href="#cb12-8"></a>   mortal(<span class="dt">X</span>)<span class="kw">.</span></span>
+<span id="cb12-9"><a href="#cb12-9"></a><span class="dt">X</span> <span class="kw">=</span> aristoteles<span class="kw">.</span></span>
+<span id="cb12-10"><a href="#cb12-10"></a></span>
+<span id="cb12-11"><a href="#cb12-11"></a><span class="fu">?-</span> dif(<span class="dt">X</span><span class="kw">,</span> socrates)<span class="kw">,</span></span>
+<span id="cb12-12"><a href="#cb12-12"></a>   dif(aristoteles<span class="kw">,</span> <span class="dt">X</span>)<span class="kw">,</span></span>
+<span id="cb12-13"><a href="#cb12-13"></a>   mortal(<span class="dt">X</span>)<span class="kw">.</span></span>
+<span id="cb12-14"><a href="#cb12-14"></a><span class="kw">false.</span></span></code></pre></div></section><section id="msort" class="title-slide slide level2"><h2><code>msort</code></h2><div class="sourceCode" id="cb13"><pre class="sourceCode prolog"><code class="sourceCode prolog"><span id="cb13-1"><a href="#cb13-1"></a><span class="fu">?-</span> msort([<span class="dv">2</span>,<span class="dv">3</span>,<span class="dv">1</span>]<span class="kw">,</span> <span class="dt">Sorted</span>)<span class="kw">.</span></span>
+<span id="cb13-2"><a href="#cb13-2"></a><span class="dt">Sorted</span> <span class="kw">=</span> [<span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">3</span>]<span class="kw">.</span></span></code></pre></div></section><section id="maplist" class="title-slide slide level2"><h2><code>maplist</code></h2><div class="sourceCode" id="cb14"><pre class="sourceCode prolog"><code class="sourceCode prolog"><span id="cb14-1"><a href="#cb14-1"></a><span class="fu">?-</span> maplist(length_(<span class="dt">X</span>)<span class="kw">,</span> [[<span class="dv">1</span>,<span class="dv">2</span>], [<span class="dv">2</span>,<span class="dv">3</span>], [<span class="dv">4</span>,<span class="dv">5</span>]])<span class="kw">.</span></span>
+<span id="cb14-2"><a href="#cb14-2"></a><span class="dt">X</span> <span class="kw">=</span> <span class="dv">2</span><span class="kw">.</span></span>
+<span id="cb14-3"><a href="#cb14-3"></a></span>
+<span id="cb14-4"><a href="#cb14-4"></a><span class="fu">?-</span> maplist(length_(<span class="dt">X</span>)<span class="kw">,</span> [[<span class="dv">1</span>,<span class="dv">2</span>], [<span class="dv">2</span>,<span class="dv">3</span>], [<span class="dv">4</span>]])<span class="kw">.</span></span>
+<span id="cb14-5"><a href="#cb14-5"></a><span class="kw">false.</span></span></code></pre></div></section><section id="permutation" class="title-slide slide level2"><h2><code>permutation</code></h2><div class="sourceCode" id="cb15"><pre class="sourceCode prolog"><code class="sourceCode prolog"><span id="cb15-1"><a href="#cb15-1"></a><span class="fu">?-</span> permutation([<span class="dv">1</span>,<span class="dv">2</span>,<span class="dv">3</span>]<span class="kw">,</span> <span class="dt">Ps</span>)<span class="kw">.</span></span>
+<span id="cb15-2"><a href="#cb15-2"></a><span class="dt">Ps</span> <span class="kw">=</span> [<span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">3</span>] <span class="kw">;</span></span>
+<span id="cb15-3"><a href="#cb15-3"></a><span class="dt">Ps</span> <span class="kw">=</span> [<span class="dv">1</span>, <span class="dv">3</span>, <span class="dv">2</span>] <span class="kw">;</span></span>
+<span id="cb15-4"><a href="#cb15-4"></a><span class="dt">Ps</span> <span class="kw">=</span> [<span class="dv">2</span>, <span class="dv">1</span>, <span class="dv">3</span>] <span class="kw">;</span></span>
+<span id="cb15-5"><a href="#cb15-5"></a><span class="dt">Ps</span> <span class="kw">=</span> [<span class="dv">2</span>, <span class="dv">3</span>, <span class="dv">1</span>] <span class="kw">;</span></span>
+<span id="cb15-6"><a href="#cb15-6"></a><span class="dt">Ps</span> <span class="kw">=</span> [<span class="dv">3</span>, <span class="dv">1</span>, <span class="dv">2</span>] <span class="kw">;</span></span>
+<span id="cb15-7"><a href="#cb15-7"></a><span class="dt">Ps</span> <span class="kw">=</span> [<span class="dv">3</span>, <span class="dv">2</span>, <span class="dv">1</span>] <span class="kw">;</span></span>
+<span id="cb15-8"><a href="#cb15-8"></a><span class="kw">false.</span></span></code></pre></div></section><section id="transpose" class="title-slide slide level2"><h2><code>transpose</code></h2><div class="sourceCode" id="cb16"><pre class="sourceCode prolog"><code class="sourceCode prolog"><span id="cb16-1"><a href="#cb16-1"></a><span class="fu">?-</span> transpose([[<span class="dv">1</span>,<span class="dv">2</span>,<span class="dv">3</span>]</span>
+<span id="cb16-2"><a href="#cb16-2"></a>             ,[<span class="dv">4</span>,<span class="dv">5</span>,<span class="dv">6</span>]</span>
+<span id="cb16-3"><a href="#cb16-3"></a>             ,[<span class="dv">7</span>,<span class="dv">8</span>,<span class="dv">9</span>]]<span class="kw">,</span> <span class="dt">Ts</span>)<span class="kw">.</span></span>
+<span id="cb16-4"><a href="#cb16-4"></a><span class="dt">Ts</span> <span class="kw">=</span> [[<span class="dv">1</span>, <span class="dv">4</span>, <span class="dv">7</span>], [<span class="dv">2</span>, <span class="dv">5</span>, <span class="dv">8</span>], [<span class="dv">3</span>, <span class="dv">6</span>, <span class="dv">9</span>]]<span class="kw">.</span></span></code></pre></div></section><section id="member" class="title-slide slide level2"><h2><code>member</code></h2><div class="sourceCode" id="cb17"><pre class="sourceCode prolog"><code class="sourceCode prolog"><span id="cb17-1"><a href="#cb17-1"></a><span class="fu">?-</span> member(b<span class="kw">,</span> [a, b, c])<span class="kw">.</span></span>
+<span id="cb17-2"><a href="#cb17-2"></a><span class="kw">true</span> <span class="kw">;</span></span>
+<span id="cb17-3"><a href="#cb17-3"></a><span class="kw">false.</span></span>
+<span id="cb17-4"><a href="#cb17-4"></a></span>
+<span id="cb17-5"><a href="#cb17-5"></a><span class="fu">?-</span> member(c<span class="kw">,</span> [a, b, c])<span class="kw">.</span></span>
+<span id="cb17-6"><a href="#cb17-6"></a><span class="kw">true.</span></span>
+<span id="cb17-7"><a href="#cb17-7"></a></span>
+<span id="cb17-8"><a href="#cb17-8"></a><span class="fu">?-</span> member(d<span class="kw">,</span> [a, b, c])<span class="kw">.</span></span>
+<span id="cb17-9"><a href="#cb17-9"></a><span class="kw">false.</span></span></code></pre></div></section></section>
+<section><section id="desafios-de-lógica-coquetel" class="title-slide slide level1"><h1>Desafios de Lógica Coquetel</h1></section><section id="exemplo" class="title-slide slide level2"><h2>Exemplo</h2><p><img data-src="./exemplo_desafio.jpg" /><a href="#/fn2" class="footnote-ref" id="fnref2" role="doc-noteref"><sup>2</sup></a></p></section></section>
+<section><section id="arcabouço-para-soluções" class="title-slide slide level1"><h1>Arcabouço para soluções</h1></section><section id="importando-clpfd" class="title-slide slide level2"><h2>Importando CLP(FD)</h2><p><em>Constraint Logic Programming over Finite Domains<a href="#/fn3" class="footnote-ref" id="fnref3" role="doc-noteref"><sup>3</sup></a></em></p>
+<p>Introduz operadores de restrição sobre inteiros.</p>
+<div class="sourceCode" id="cb18"><pre class="sourceCode prolog"><code class="sourceCode prolog"><span id="cb18-1"><a href="#cb18-1"></a><span class="kw">:-</span> use_module(library(clpfd))<span class="kw">.</span></span></code></pre></div></section><section id="algumas-funções-auxiliares" class="title-slide slide level2"><h2>Algumas funções auxiliares</h2><div class="sourceCode" id="cb19"><pre class="sourceCode prolog"><code class="sourceCode prolog"><span id="cb19-1"><a href="#cb19-1"></a>length_(<span class="dt">L</span><span class="kw">,</span> <span class="dt">Ls</span>) <span class="kw">:-</span> length(<span class="dt">Ls</span><span class="kw">,</span> <span class="dt">L</span>)<span class="kw">.</span></span></code></pre></div>
+<div class="sourceCode" id="cb20"><pre class="sourceCode prolog"><code class="sourceCode prolog"><span id="cb20-1"><a href="#cb20-1"></a>alldif([])<span class="kw">.</span></span>
+<span id="cb20-2"><a href="#cb20-2"></a>alldif([<span class="dt">X</span><span class="fu">|</span><span class="dt">Xs</span>]) <span class="kw">:-</span></span>
+<span id="cb20-3"><a href="#cb20-3"></a>    maplist(dif(<span class="dt">X</span>)<span class="kw">,</span> <span class="dt">Xs</span>)<span class="kw">,</span></span>
+<span id="cb20-4"><a href="#cb20-4"></a>    alldif(<span class="dt">Xs</span>)<span class="kw">.</span></span></code></pre></div>
+<div class="sourceCode" id="cb21"><pre class="sourceCode prolog"><code class="sourceCode prolog"><span id="cb21-1"><a href="#cb21-1"></a>is_permutation(<span class="dt">Xs</span><span class="kw">,</span> <span class="dt">Ys</span>) <span class="kw">:-</span></span>
+<span id="cb21-2"><a href="#cb21-2"></a>    msort(<span class="dt">Xs</span><span class="kw">,</span> <span class="dt">Sorted</span>)<span class="kw">,</span></span>
+<span id="cb21-3"><a href="#cb21-3"></a>    msort(<span class="dt">Ys</span><span class="kw">,</span> <span class="dt">Sorted</span>)<span class="kw">.</span></span></code></pre></div></section></section>
+<section><section id="solução-para-os-casais-de-férias" class="title-slide slide level1"><h1>Solução para os Casais de Férias</h1><p><a href="https://www.geniol.com.br/logica/desafios/casais-de-ferias/">https://www.geniol.com.br/logica/desafios/casais-de-ferias/</a></p></section><section id="preâmbulo-comum" class="title-slide slide level2"><h2>Preâmbulo comum</h2><div class="sourceCode" id="cb22"><pre class="sourceCode prolog"><code class="sourceCode prolog"><span id="cb22-1"><a href="#cb22-1"></a>resolver(<span class="dt">Pessoas</span>) <span class="kw">:-</span></span>
+<span id="cb22-2"><a href="#cb22-2"></a>    length(<span class="dt">Pessoas</span><span class="kw">,</span> <span class="dv">4</span>)<span class="kw">,</span></span>
+<span id="cb22-3"><a href="#cb22-3"></a>    maplist(length_(<span class="dv">4</span>)<span class="kw">,</span> <span class="dt">Pessoas</span>)<span class="kw">,</span></span>
+<span id="cb22-4"><a href="#cb22-4"></a>    transpose(<span class="dt">Pessoas</span><span class="kw">,</span> <span class="dt">Attrs</span>)<span class="kw">,</span></span>
+<span id="cb22-5"><a href="#cb22-5"></a>    <span class="dt">Attrs</span> <span class="kw">=</span> [<span class="dt">_Casais</span>, <span class="dt">Diferenciais</span>, <span class="dt">Hoteis</span>, <span class="dt">Precos</span>]<span class="kw">,</span></span>
+<span id="cb22-6"><a href="#cb22-6"></a>    maplist(length_(<span class="dv">4</span>)<span class="kw">,</span> <span class="dt">Attrs</span>)<span class="kw">,</span></span>
+<span id="cb22-7"><a href="#cb22-7"></a></span>
+<span id="cb22-8"><a href="#cb22-8"></a>    permutation([<span class="dv">100</span>, <span class="dv">200</span>, <span class="dv">300</span>, <span class="dv">400</span>]<span class="kw">,</span> <span class="dt">Precos</span>)<span class="kw">,</span></span>
+<span id="cb22-9"><a href="#cb22-9"></a>    permutation([ar_condicionado, bela_vista, janta, vaga_garagem]<span class="kw">,</span> <span class="dt">Diferenciais</span>)<span class="kw">,</span></span>
+<span id="cb22-10"><a href="#cb22-10"></a>    permutation([california, floresta_nativa, ponte_grande, volte_sempre]<span class="kw">,</span> <span class="dt">Hoteis</span>)<span class="kw">,</span></span>
+<span id="cb22-11"><a href="#cb22-11"></a></span>
+<span id="cb22-12"><a href="#cb22-12"></a>    <span class="dt">Pessoas</span> <span class="kw">=</span> [<span class="dt">GR</span>, <span class="dt">JV</span>, <span class="dt">JL</span>, <span class="dt">LE</span>]<span class="kw">,</span></span>
+<span id="cb22-13"><a href="#cb22-13"></a>    <span class="dt">GR</span> <span class="kw">=</span> [gisele_rafael, <span class="dt">_</span>, <span class="dt">_</span>, <span class="dt">_</span>]<span class="kw">,</span></span>
+<span id="cb22-14"><a href="#cb22-14"></a>    <span class="dt">JV</span> <span class="kw">=</span> [jeny_victor, <span class="dt">_</span>, <span class="dt">_</span>, <span class="dt">_</span>]<span class="kw">,</span></span>
+<span id="cb22-15"><a href="#cb22-15"></a>    <span class="dt">JL</span> <span class="kw">=</span> [juliana_luis, <span class="dt">_</span>, <span class="dt">_</span>, <span class="dt">_</span>]<span class="kw">,</span></span>
+<span id="cb22-16"><a href="#cb22-16"></a>    <span class="dt">LE</span> <span class="kw">=</span> [lucia_eder, <span class="dt">_</span>, <span class="dt">_</span>, <span class="dt">_</span>]<span class="kw">,</span></span></code></pre></div></section><section id="dicas" class="title-slide slide level2"><h2>Dicas</h2><div class="sourceCode" id="cb23"><pre class="sourceCode prolog"><code class="sourceCode prolog"><span id="cb23-1"><a href="#cb23-1"></a><span class="co">%% dica 1. O casal que ficou no hotel com vaga na garagem pagou R$</span></span>
+<span id="cb23-2"><a href="#cb23-2"></a><span class="co">%% 100 a mais na diária do que o casal Juliana e Luis.</span></span></code></pre></div>
+<div class="sourceCode" id="cb24"><pre class="sourceCode prolog"><code class="sourceCode prolog"><span id="cb24-1"><a href="#cb24-1"></a>member([<span class="dt">CVagaGaragem</span>, vaga_garagem, <span class="dt">_</span>, <span class="dt">PVagaGaragem</span>]<span class="kw">,</span> <span class="dt">Pessoas</span>)<span class="kw">,</span></span>
+<span id="cb24-2"><a href="#cb24-2"></a>member([juliana_luis, <span class="dt">DJulianaLuis</span>, <span class="dt">_</span>, <span class="dt">PJulianaLuis</span>]<span class="kw">,</span> <span class="dt">Pessoas</span>)<span class="kw">,</span></span>
+<span id="cb24-3"><a href="#cb24-3"></a><span class="dt">CVagaGaragem</span> <span class="kw">\=</span> juliana_luis<span class="kw">,</span></span>
+<span id="cb24-4"><a href="#cb24-4"></a><span class="dt">DJulianaLuis</span> <span class="kw">\=</span> vaga_garagem<span class="kw">,</span></span>
+<span id="cb24-5"><a href="#cb24-5"></a><span class="dt">PVagaGaragem</span> #= <span class="dt">PJulianaLuis</span> <span class="fu">+</span> <span class="dv">100</span><span class="kw">,</span></span></code></pre></div>
+<div class="sourceCode" id="cb25"><pre class="sourceCode prolog"><code class="sourceCode prolog"><span id="cb25-1"><a href="#cb25-1"></a><span class="co">%% dica 2. O casal que se hospedou no hotel Volte Sempre pagou uma</span></span>
+<span id="cb25-2"><a href="#cb25-2"></a><span class="co">%% diária mais cara do que o casal Jeny e Victor.</span></span></code></pre></div>
+<div class="sourceCode" id="cb26"><pre class="sourceCode prolog"><code class="sourceCode prolog"><span id="cb26-1"><a href="#cb26-1"></a>member([<span class="dt">CVolteSempre</span>, <span class="dt">_</span>, volte_sempre, <span class="dt">PVolteSempre</span>]<span class="kw">,</span> <span class="dt">Pessoas</span>)<span class="kw">,</span></span>
+<span id="cb26-2"><a href="#cb26-2"></a>member([jeny_victor, <span class="dt">_</span>, <span class="dt">HJenyVictor</span>, <span class="dt">PJenyVictor</span>]<span class="kw">,</span> <span class="dt">Pessoas</span>)<span class="kw">,</span></span>
+<span id="cb26-3"><a href="#cb26-3"></a><span class="dt">CVolteSempre</span> <span class="kw">\=</span> jeny_victor<span class="kw">,</span></span>
+<span id="cb26-4"><a href="#cb26-4"></a><span class="dt">HJenyVictor</span> <span class="kw">\=</span> volte_sempre<span class="kw">,</span></span>
+<span id="cb26-5"><a href="#cb26-5"></a><span class="dt">PVolteSempre</span> #&gt; <span class="dt">PJenyVictor</span><span class="kw">,</span></span></code></pre></div>
+<div class="sourceCode" id="cb27"><pre class="sourceCode prolog"><code class="sourceCode prolog"><span id="cb27-1"><a href="#cb27-1"></a><span class="co">%% dica 3. O hotel California não tem a diária mais barata.</span></span></code></pre></div>
+<div class="sourceCode" id="cb28"><pre class="sourceCode prolog"><code class="sourceCode prolog"><span id="cb28-1"><a href="#cb28-1"></a>member([<span class="dt">_</span>, <span class="dt">_</span>, california, <span class="dt">PCalifornia</span>]<span class="kw">,</span> <span class="dt">Pessoas</span>)<span class="kw">,</span></span>
+<span id="cb28-2"><a href="#cb28-2"></a><span class="dt">PCalifornia</span> #&gt; <span class="dv">100</span><span class="kw">,</span></span></code></pre></div>
+<div class="sourceCode" id="cb29"><pre class="sourceCode prolog"><code class="sourceCode prolog"><span id="cb29-1"><a href="#cb29-1"></a><span class="co">%% dica 4. A diária do hotel Floresta Nativa é mais cara do que a</span></span>
+<span id="cb29-2"><a href="#cb29-2"></a><span class="co">%% diária do hotel Volte Sempre.</span></span></code></pre></div>
+<div class="sourceCode" id="cb30"><pre class="sourceCode prolog"><code class="sourceCode prolog"><span id="cb30-1"><a href="#cb30-1"></a>member([<span class="dt">_</span>, <span class="dt">_</span>, floresta_nativa, <span class="dt">PFlorestaNativa</span>]<span class="kw">,</span> <span class="dt">Pessoas</span>)<span class="kw">,</span></span>
+<span id="cb30-2"><a href="#cb30-2"></a>member([<span class="dt">_</span>, <span class="dt">_</span>, volte_sempre, <span class="dt">PVolteSempre</span>]<span class="kw">,</span> <span class="dt">Pessoas</span>)<span class="kw">,</span></span>
+<span id="cb30-3"><a href="#cb30-3"></a><span class="dt">PFlorestaNativa</span> #&gt; <span class="dt">PVolteSempre</span><span class="kw">,</span></span></code></pre></div>
+<div class="sourceCode" id="cb31"><pre class="sourceCode prolog"><code class="sourceCode prolog"><span id="cb31-1"><a href="#cb31-1"></a><span class="co">%% dica 5. O hotel que tem ar condicionado é o Floresta Nativa ou</span></span>
+<span id="cb31-2"><a href="#cb31-2"></a><span class="co">%% o hotel com a diária de R$ 100.</span></span></code></pre></div>
+<div class="sourceCode" id="cb32"><pre class="sourceCode prolog"><code class="sourceCode prolog"><span id="cb32-1"><a href="#cb32-1"></a>member([<span class="dt">_</span>, ar_condicionado, <span class="dt">HArCondicionado</span>, <span class="dt">PArCondicionado</span>]<span class="kw">,</span> <span class="dt">Pessoas</span>)<span class="kw">,</span></span>
+<span id="cb32-2"><a href="#cb32-2"></a>( <span class="dt">HArCondicionado</span> <span class="fu">==</span> floresta_nativa<span class="kw">,</span> <span class="dt">PArCondicionado</span> #\= <span class="dv">100</span></span>
+<span id="cb32-3"><a href="#cb32-3"></a><span class="kw">;</span> <span class="dt">HArCondicionado</span> <span class="kw">\=</span> floresta_nativa<span class="kw">,</span> <span class="dt">PArCondicionado</span> #= <span class="dv">100</span> )<span class="kw">,</span></span></code></pre></div>
+<div class="sourceCode" id="cb33"><pre class="sourceCode prolog"><code class="sourceCode prolog"><span id="cb33-1"><a href="#cb33-1"></a><span class="co">%% dica 6. Sobre o casal Lucia e Eder e o casal que se hospedou no</span></span>
+<span id="cb33-2"><a href="#cb33-2"></a><span class="co">%% hotel Floresta Nativa, um ficou no quarto com bela vista e o</span></span>
+<span id="cb33-3"><a href="#cb33-3"></a><span class="co">%% outro pagou R$ 200 de diária, não necessariamente nessa ordem.</span></span></code></pre></div>
+<div class="sourceCode" id="cb34"><pre class="sourceCode prolog"><code class="sourceCode prolog"><span id="cb34-1"><a href="#cb34-1"></a>member([lucia_eder, <span class="dt">DLuciaEder</span>, <span class="dt">HLuciaEder</span>, <span class="dt">PLuciaEder</span>]<span class="kw">,</span> <span class="dt">Pessoas</span>)<span class="kw">,</span></span>
+<span id="cb34-2"><a href="#cb34-2"></a>member([<span class="dt">CFlorestaNativa</span>, <span class="dt">DFlorestaNativa</span>, floresta_nativa, <span class="dt">PFlorestaNativa</span>]<span class="kw">,</span> <span class="dt">Pessoas</span>)<span class="kw">,</span></span>
+<span id="cb34-3"><a href="#cb34-3"></a><span class="dt">CFlorestaNativa</span> <span class="kw">\=</span> lucia_eder<span class="kw">,</span></span>
+<span id="cb34-4"><a href="#cb34-4"></a><span class="dt">HLuciaEder</span> <span class="kw">\=</span> floresta_nativa<span class="kw">,</span></span>
+<span id="cb34-5"><a href="#cb34-5"></a>( <span class="dt">DLuciaEder</span> <span class="fu">==</span> bela_vista<span class="kw">,</span> <span class="dt">PFlorestaNativa</span> #= <span class="dv">200</span></span>
+<span id="cb34-6"><a href="#cb34-6"></a><span class="kw">;</span> <span class="dt">DFlorestaNativa</span> <span class="fu">==</span> bela_vista<span class="kw">,</span> <span class="dt">PLuciaEder</span> #= <span class="dv">200</span> )<span class="kw">.</span></span></code></pre></div></section></section>
+<section id="solução" class="title-slide slide level1"><h1>Solução</h1><pre class="shell"><code>$ swipl -g &#39;resolver_formatado(Ps)&#39; desafio2.pl &lt;/dev/null
+</code></pre>
+<div class="sourceCode" id="cb36"><pre class="sourceCode prolog"><code class="sourceCode prolog"><span id="cb36-1"><a href="#cb36-1"></a>[desafio2]<span class="kw">.</span></span>
+<span id="cb36-2"><a href="#cb36-2"></a>resolver_formatado(<span class="dt">Ps</span>)<span class="kw">.</span></span></code></pre></div></section>
+<section id="tufe" class="title-slide slide level1"><h1>Tufe?</h1><p>Tufe.</p></section>
+<section class="footnotes" role="doc-endnotes">
+<hr />
+<ol>
+<li id="fn1" role="doc-endnote"><p><a href="https://en.wikipedia.org/wiki/Prolog">https://en.wikipedia.org/wiki/Prolog</a><a href="#/fnref1" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn2" role="doc-endnote"><p><a href="https://produto.mercadolivre.com.br/MLB-821393485-coquetel-desafios-de-logica-lote-c-2-revistas-novas--_JM">https://produto.mercadolivre.com.br/MLB-821393485-coquetel-desafios-de-logica-lote-c-2-revistas-novas--_JM</a><a href="#/fnref2" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn3" role="doc-endnote"><p><a href="https://www.swi-prolog.org/man/clpfd.html">https://www.swi-prolog.org/man/clpfd.html</a><a href="#/fnref3" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+</ol>
+</section>
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/reveal.js@3.8.0/js/reveal.js"></script>
+
+  <script>
+
+      // Full list of configuration options available at:
+      // https://github.com/hakimel/reveal.js#configuration
+      Reveal.initialize({
+        // Push each slide change to the browser history
+        history: true,
+        // Parallax background image
+        parallaxBackgroundImage: 'logo2.png', // e.g. "'https://s3.amazonaws.com/hakim-static/reveal-js/reveal-parallax-1.jpg'"
+        math: {
+          mathjax: 'https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.2/MathJax.js',
+          config: 'TeX-AMS_HTML-full',
+          tex2jax: {
+            inlineMath: [['\\(','\\)']],
+            displayMath: [['\\[','\\]']],
+            balanceBraces: true,
+            processEscapes: false,
+            processRefs: true,
+            processEnvironments: true,
+            preview: 'TeX',
+            skipTags: ['script','noscript','style','textarea','pre','code'],
+            ignoreClass: 'tex2jax_ignore',
+            processClass: 'tex2jax_process'
+          },
+        },
+
+        // Optional reveal.js plugins
+        dependencies: [
+          { src: 'https://cdn.jsdelivr.net/npm/reveal.js@3.8.0/lib/js/classList.js', condition: function() { return !document.body.classList; } },
+          { src: 'https://cdn.jsdelivr.net/npm/reveal.js@3.8.0/plugin/zoom-js/zoom.js', async: true },
+          { src: 'https://cdn.jsdelivr.net/npm/reveal.js@3.8.0/plugin/math/math.js', async: true },
+          { src: 'https://cdn.jsdelivr.net/npm/reveal.js@3.8.0/plugin/notes/notes.js', async: true }
+        ]
+      });
+    </script>
+    </body>
+</html>
