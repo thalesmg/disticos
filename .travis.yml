@@ -1,0 +1,10 @@
+language: nix
+script: nix-build release.nix
+deploy:
+  provider: pages
+  skip_cleanup: true
+  on:
+    branch: master
+  local_dir: "./result/"
+  github_token:
+    secure: setCNGsoQQHEwzxGg+I9sKC+/s5pIWyCPzZxrPerZAi3j+y+3IpSVEuskxvLNW5URgHNSmVKLcQVNZRCBIcGbzb5tz4EDwgSNeHIdachm3nOSEwfDghBEqzLujL3SjSMC0btpsbruG/YpjO28nLLo2sIDsypL36/w/tpPS4xaNpI9cHtdEorqKtowfb9gy47/HPXm+mnsmFDECq0CtsGav1ceT/yQ/Kx3gaCO4PuGnco7SMhVoNJicwO4ZNo/Q2r8MBz1ay5KIRwMcv5C5PBX5JLnmfzEyRCkvbx2dVFHh4xpK0AXy8CGsBLm9FarNcGlWBZa5RFIckPYctGXgHDRkSblxBdYVyhlqUBUj1lg1AmvMJh41hI55cuxENO4V60xGmsMk4f9WUZfjxyxFAN2EoGPdZ+QqdRvf9kAe1B/Ywxe91+Qdnztn9no5tD0LQ0tbXS3S/6DAiA11K5qRjHp2BoUYaX5mARlIbqvFxvTDxP9lut4qAGUL+DGfJ+bfO3Tg+iZ9Y9oYAnwItOKwcGosGFbVeyxcGcJDXYXubmO6EvKHLQhaJ4jPMKdXmGBFRe04h2jP11g9Ai06gQFthnwV/NowAk91JXH+zLOb+m57WVkav9RgS/3RqT8RW1o8YOXSpm5nvybQfMUiIdn405OB0/4o0LDN4tUmt/JDOfN/g=

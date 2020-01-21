@@ -1,0 +1,14 @@
+digraph G {
+        world;
+
+        inputs;
+        transformations;
+        state;
+        merge;
+
+        inputs -> transformations -> merge;
+        inputs -> state -> merge;
+
+        world -> inputs;
+        merge -> world;
+}

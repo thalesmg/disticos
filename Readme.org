@@ -1,0 +1,5 @@
+* Build
+
+#+BEGIN_SRC shell
+nix-build
+#+END_SRC
