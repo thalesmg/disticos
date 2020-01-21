@@ -1,0 +1,10 @@
+language: nix
+script: nix-build release.nix
+
+deploy:
+  provider: pages
+  skip_cleanup: yes
+  github_token: FIXME
+  on:
+    branch: master
+  local_dir: ./result/
