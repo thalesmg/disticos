@@ -1,0 +1,254 @@
+#+Title: Vôo de Pássaro: Functional Reactive Programming
+#+Author: Thales Macedo Garitezi
+
+#+Startup: showeverything
+
+#+REVEAL_ROOT: https://cdn.jsdelivr.net/npm/reveal.js@3.8.0
+# ,##+REVEAL_ROOT: file:///home/thales/Downloads/reveal.js-3.8.0/
+#+REVEAL_THEME: black
+#+REVEAL_MIN_SCALE: 0.3
+#+REVEAL_MAX_SCALE: 2.5
+#+REVEAL_EXTRA_CSS: ./style.css
+#+OPTIONS: toc:1
+
+* O que é FRP?
+
+/Um modelo para valores que dependem do tempo./
+
+*** Criadores
+
+Conal Elliott e Paul Hudak
+
+/Functional Reactive Animation/, ICFP 97.
+
+*** Características
+
+- Denotativa :: elementos ➡ significado
+- Contínua :: implementação
+- Declarativa :: o quê vs. como (ou modelo vs. apresentação)
+- Pura :: estado (tempo) explícito
+- Componível ::
+
+** \\
+
+#+NAME: fig:ciclo
+#+CAPTION: Ciclo de vida
+[[./ciclo.png]]
+
+Adaptado de [[https://www.youtube.com/watch?v=Agu6jipKfYw][Controlling Time and Space, Evan Czaplicki]]
+
+* Usos
+
+- Música [fn:euterpea] [[https://youtu.be/xtmo6Bmfahc?t=2994][(51:16)]].
+- Interfaces gráficas [fn:reflex].
+- Robôs [fn:hudak-arrow].
+- Jogos [fn:eulerea] [fn:yampa-game]. [[https://linearity.itch.io/peoplemon][Ex.]]
+
+[fn:euterpea] https://youtu.be/xtmo6Bmfahc?t=2994
+[fn:eulerea] https://leanpub.com/gameinhaskell
+[fn:yampa-game] https://linearity.itch.io/peoplemon
+[fn:reflex] https://reflex-frp.org/
+[fn:hudak-arrow] https://link.springer.com/chapter/10.1007/978-3-540-44833-4_6 e http://www.cs.yale.edu/homes/hudak/CS429F04/AFPLectureNotes.pdf
+
+* Classificações
+
+*** Como classificar - Problema
+
+Contagem de cliques.
+
+1. Inicia o grafo com a contagem ligada.
+2. Clica 5 vezes.
+3. Muda o grafo de para ignorar cliques.
+4. Clica mais 5 vezes.
+5. Habilita novamente a contagem.
+
+N = 0, 5, 10 ??
+
+** Motor das computações
+
+- Push :: Movido por dados. Eventos percorrem o grafo e produzem um valor conforme ocorrem.
+- Pull :: Movido por demanda. Um valor é demandado e o grafo é percorrido até as fontes para computá-lo.
+- Push/Pull :: "O melhor dos dois mundos". Eventos internos construídos apenas quando resultado demandado. [fn:wiki-push-pull]
+
+[fn:wiki-push-pull] https://en.wikipedia.org/wiki/Functional_reactive_programming#Implementation_issues, acessado em 12/09/2019.
+
+** Dinamicidade do grafo
+
+- /Classic FRP ou First Order FRP/
+- /Real-Time FRP e Event-Driven FRP/
+- /Arrowized FRP/
+
+# - /Higher Order FRP e Asynchronous Data Flow/
+
+*** Classic FRP ou First Order FRP
+
+Elementos básicos
+
+#+BEGIN_SRC haskell
+-- | Comportamentos
+Behavior a = Time -> a
+
+-- | Eventos
+Event a = [(Time, a)]
+#+END_SRC
+
+- Behaviors :: posição, velocidade, aceleração, ...
+- Eventos :: cliques, requests HTTP, ...
+
+*** \\
+
+- Behaviors/eventos são contínuos
+- Behaviors/eventos infinitos
+- Grafos estáticos
+- Síncrono por padrão
+- Pode levar a /space e time leaks/
+- Nós conectados ao mundo por padrão
+
+*** Real-Time FRP e Event-Driven FRP
+
+#+BEGIN_SRC haskell
+-- Equivalência entre eventos / comportamentos
+Event a ~ Behavior (Maybe a)
+
+-- Tipo comum: Sinais
+Signal a = Time -> a
+-- Event ~ Time -> Maybe a
+#+END_SRC
+
+- Busca resolver problemas de eficiência
+- Custo em expressividade
+- RT: usa uma linguagem irrestrita subjacente, uma restrita para lidar com sinais
+- ED: não recomputa nada enquanto não houver um evento
+
+*** Arrowized FRP
+
+- Procura manter a expressividade do /Classical FRP/ e evitar /space e time leaks/
+- Eventos não são mais usados
+- /Signal Functions/
+  - Não são expostas diretamente para o programador
+
+#+BEGIN_SRC haskell
+-- Signal a = Time -> a
+-- Event  a = Time -> Maybe a
+
+SF a b = Signal a -> Signal b
+#+END_SRC
+
+*** \\
+
+- Sinais são contínuos
+- Sinais infinitos
+- +Sinais são estáticos+
+- Síncrono por padrão
+- +Nós conectados ao mundo por padrão+
+
+* Exemplos
+
+https://github.com/gelisam/frp-zoo
+
+- *Haskell*: artery, auto, DysFRP, elerea, euphoria, FRPNow, grapefruit, machinecell, netwire, varying, ordrea, reactive-bacon, reactive-banana, reflex, Yampa, sodium
+- *Clojure(script)*: recurrent, reagi, zelkova, re-frame
+- *JavaScript*: Bacon.js, ReactiveCocoa, Reactive Extensions, Rx.js, Cycle.js
+
+** Netwire
+
+/Arrowized, continuous, push-based/
+
+http://hackage.haskell.org/package/netwire
+
+https://github.com/esoeylemez/netwire
+
+** Ertugrul Söylemez
+
+22/09/1985 🟊
+
+12/05/2018 ✝ [fn:söylemez]
+
+Último release da ~netwire~: 25/03/2018
+
+[fn:söylemez] https://byorgey.wordpress.com/2018/05/21/ertugrul-soylemez-1985-2018/
+
+** Experimentos: movimentos com aceleração constante em 2D
+
+** \\
+
+\begin{equation}
+\vec{a}(t) = \vec{a_0} \\
+
+\vec{v}(t) = \vec{v_0} + \vec{a} t \\
+
+\vec{s}(t) = \vec{s_0} + \vec{v_0} t + \frac{\vec{a_0} t^2}{2}
+\end{equation}
+
+** \\
+
+\begin{equation}
+\vec{s}(t) = \vec{s}(t_0) + \int_{t_0}^t \vec{v}(t) dt \\
+
+\vec{v}(t) = \vec{v}(t_0) + \int_{t_0}^t \vec{a}(t) dt
+\end{equation}
+** \\
+
+#+BEGIN_SRC haskell
+position = proc (vx, vy) -> do
+  sx <- integral 0 -< vx
+  sy <- integral 0 -< vy
+  returnA -< (sx, sy)
+
+velocity = proc (ax, ay) -> do
+  vx <- integral vx0 -< ax
+  vy <- integral vy0 -< ay
+  returnA -< (vx, vy)
+#+END_SRC
+
+** Velocidade constante
+
+[[./mru1.gif]]
+
+** Velocidade constante
+
+[[./mru2.gif]]
+
+** Aceleração
+
+[[./acel1.gif]]
+
+** Input de teclado, colisões e atrito
+
+\begin{equation}
+\vec{a}(t) = \vec{a_0} - \alpha \vec{v}(t) \\
+
+0 < \alpha < 1
+\end{equation}
+
+https://github.com/thalesmg/test-haskell-netwire-sdl2
+
+* Referências
+
+- FRP segundo Conal Elliott: https://stackoverflow.com/a/1030631/2708711
+- Paper sobre Arrowized FRP: http://www.cs.yale.edu/homes/hudak/CS429F04/AFPLectureNotes.pdf
+- Tese do Evan Czaplicki: https://elm-lang.org/assets/papers/concurrent-frp.pdf
+- Zoológico de bibliotecas FRP: https://github.com/gelisam/frp-zoo
+- Functional Reactive Programming: https://www.manning.com/books/functional-reactive-programming
+
+* Tufe
+
+🍺
+
+* Apêndice
+
+** FRP vs. CSP
+
+São duas abstrações para descrever sistemas dinâmicos / concorrência.
+
+CSP é um formalismo para descrever sistemas concorrentes cujos
+processos que o compõem interagem através de eventos de comunicação.[fn:roscoe]
+
+*** \\
+
+Enquanto FRP descreve /comportamentos e eventos/ que dependem
+diretamente do tempo e primitivas para combiná-los em novos
+/comportamentos/, CSP descreve o /alfabeto/ que /processos/ podem usar
+para comunicar-se entre si e com o ambiente.
+
+[fn:roscoe] The theory and practice of concurrency. A. W. Roscoe, 1998.

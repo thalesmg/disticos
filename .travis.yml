@@ -1,0 +1,16 @@
+language: nix
+script:
+  - nix-build release.nix
+  - mkdir -p ./dist
+  - cp -r ./result/* ./dist
+  - rm ./result
+
+deploy:
+  provider: pages:git
+  edge: true
+  skip_cleanup: true
+  on:
+    branch: master
+  local_dir: ./dist/
+  token:
+    secure: IsttZaz7j8pAvBGsuGxytnHuQ6D8CXV9vXhZ0UO12MwieEAnpJqWeU3Spk6oQ+cJXkxktA8REtW8j9l29W74pvd2LJkyeF4brb8pRO0XghY+kkxnc8BtacjRQ6eqtZlpxOGrSYN/5eOFb7e1vQqzNjb7c91Snlo08nEc3+5srxbIKc4+9gHN0IhB8DU2Iy2VvW7tt/7TLkec4DOHWnmh1TK/+dRYG6g9+DwNOiRnqLaj3nl/awU3Od5lM0yi+htZht/9wwnbELDkHt6yBu7/DE5rtW2VZo+qjoebWNgrJwjtuymN41xTztkwR5KNUgVvQGm1zSpMkhkDzwIAg7YDakHoSSBBflLPxs3KTN3ALilvNmaUJnLl/+BsbTFbyu3YpxExOY9p0TNVmXR+73Yo/eG3ilCFxxguH+7cMjHXhBvJ99FFKcm3M2aWUgJ8ndQ/7Effo3SSHKth/vE6Q5BfLCqrSQnI9pjlCkPCu+fAAGJ9yV/VOQGuUp/VYD7neSWgc7trMKFmBEIR4RcZl/Guz+wgkqECCCLCeSxQCcISm2UB1MTdDSxwMX5Js5mKLG2sj+7FBG9gSnsbLteDFYc0ZDYBq+V1VX3W3Pkjp2dVMTwsO4WXTfpANOOOuFXwjf95avz5AYFiLeZggsm9KPC6LDl2RHM8cRfs/uRtCirWjFw=
