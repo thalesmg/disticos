@@ -3,6 +3,7 @@
 let revealjs-url = "https://cdn.jsdelivr.net/npm/reveal.js@3.8.0";
 in stdenv.mkDerivation {
   name = "prolog-coquetel";
+  description = "Resolvendo desafios de Lógica da Coquetel com Prolog";
   src = ./.;
   buildPhase = ''
     ${pandoc}/bin/pandoc \

@@ -3,6 +3,7 @@
 let revealjs-url = "https://cdn.jsdelivr.net/npm/reveal.js@3.8.0";
 in stdenv.mkDerivation {
   name = "frp";
+  description = "Vôo de Pássaro: Functional Reactive Programming";
   src = ./.;
   buildPhase = ''
     ${pandoc}/bin/pandoc \
