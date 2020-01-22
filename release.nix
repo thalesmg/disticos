@@ -9,9 +9,12 @@ let
       <style>
         body { font-family: sans-serif; }
         .darkest-blue { background-color: #181a26; }
+        .gold { text: #ffb700; }
+        a { color: #ffb700; }
+        a:visited { color: #ffb700; }
       </style>
     </head>
-    <body class="darkest-blue">
+    <body class="darkest-blue gold">
       <ul>
   ''
     +
