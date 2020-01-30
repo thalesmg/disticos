@@ -32,8 +32,9 @@ https://christine.website/blog/dhall-kubernetes-2020-01-25
 
 # Dhall
 
-- Modularidade
-- Evitar repetições
+- Modularidade.
+- Evita repetições.
+- Não tem efeitos arbitrários.
 
 ## Modularidade
 
@@ -68,7 +69,7 @@ dhall-to-yaml <<< './mkDeployment.dhall ./dadosProd.dhall'
 dhall-to-yaml <<< './mkDeployment.dhall ./dadosStaging.dhall'
 ```
 
-## Evitar repetições
+## Evitando repetições
 
 ```{.dhall .number-lines}
 let envKeys = ["prod-bifrost-database", ...]
@@ -138,9 +139,8 @@ envFrom:
 - [Kubeval](https://kubeval.instrumenta.dev/)
   - Valida o schema e os tipos das chaves, mas não permite que sejam
     criados _templating_.
-- [Jsonnet](https://jsonnet.org/)
+- [Jsonnet](https://jsonnet.org/), [ytt](https://get-ytt.io/)
   - Apenas templating, sem validação.
-- [dyson](https://github.com/Xe/within-terraform/tree/master/dyson)
 
 ##
 
