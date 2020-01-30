@@ -3,23 +3,21 @@
 % 2020-01-29
 
 
-# Rascunho
-
-https://christine.website/blog/dhall-kubernetes-2020-01-25
-
 # Problema
 
 - Gerenciar um conjunto de manifestos Kubernetes
   - ... para múltiplos ambientes
   - ... evitando copia/cola entre projetos
-  - ... e checando que são válidos
+  - ... e checando que são válidos.
+- É fácil errar escrevendo YAML manualmente (identação, typos nas
+  chaves, tipos dos valores).
 
-# Ferramentas atuais
+# Ferramentas atuais {.small}
 
 - [CUE](https://github.com/cuelang/cue/blob/master/doc/tutorial/kubernetes/README.md)
   - Não tem os schemas prontos: precisa fazer manualmente.
 - [Helm](https://helm.sh/)
-  - Pressupõe que seu template ou `values.yml` esteja correto.
+  - Pressupõe que seu template ("`values.yml`") esteja correto.
 - [Kustomize](https://kustomize.io/)
   - Faz substituições _type safe_ de variáveis, mas não garante que o
     manifesto resultante é válido.
@@ -155,3 +153,7 @@ envFrom:
 - KSF Media
 - Mira Networks
 - NoRedInk
+
+## Relato
+
+https://christine.website/blog/dhall-kubernetes-2020-01-25
