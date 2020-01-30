@@ -16,6 +16,8 @@ in stdenv.mkDerivation {
       --css code_style.css \
       --slide-level 3 \
       --mathjax \
+      --toc \
+      --toc-depth 1 \
       apresentação.md
   '';
   installPhase = ''
