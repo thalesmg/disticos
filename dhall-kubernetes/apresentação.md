@@ -9,26 +9,34 @@ https://christine.website/blog/dhall-kubernetes-2020-01-25
 
 # Problema
 
-# Dhall em Produção
+- Gerenciar um conjunto de manifestos Kubernetes
+  - ... para múltiplos ambientes
+  - ... evitando copia/cola entre projetos
+  - ... e checando que são válidos
 
-[Acessado em 2020-01-29](https://docs.dhall-lang.org/discussions/Dhall-in-production.html)
+# Ferramentas atuais
 
-- Advanced Telematic Systems GmbH
-- AlasConnect
-- Awake Security
-- Cachix
-- CircuitHub
-- Coralogix
+- [CUE](https://github.com/cuelang/cue/blob/master/doc/tutorial/kubernetes/README.md)
+  - Não tem os schemas prontos: precisa fazer manualmente.
+- [Helm](https://helm.sh/)
+  - Pressupõe que seu template ou `values.yml` esteja correto.
+- [Kustomize](https://kustomize.io/)
+  - Faz substituições _type safe_ de variáveis, mas não garante que o
+    manifesto resultante é válido.
+- [Kubeval](https://kubeval.instrumenta.dev/)
+  - Valida o schema e os tipos das chaves, mas não permite que sejam
+    criados _templating_.
+- [Jsonnet](https://jsonnet.org/), [ytt](https://get-ytt.io/)
+  - Apenas templating, sem validação.
 
 ##
 
-- Earnest Research
-- Formation
-- IOHK
-- Kos Media, LLC
-- KSF Media
-- Mira Networks
-- NoRedInk
+Usar uma combinação de Kustomize + Kubeval ?
+
+## Porém
+
+Nenhuma das alternativas anteriores permite modularidade / uso de
+funções para não nos repetirmos.
 
 # Dhall
 
@@ -127,26 +135,23 @@ envFrom:
     optional: false
 ```
 
-# Alternativas
+# Dhall em Produção
 
-- [CUE](https://github.com/cuelang/cue/blob/master/doc/tutorial/kubernetes/README.md)
-  - Não tem os schemas prontos: precisa fazer manualmente.
-- [Helm](https://helm.sh/)
-  - Pressupõe que seu template ou `values.yml` esteja correto.
-- [Kustomize](https://kustomize.io/)
-  - Faz substituições _type safe_ de variáveis, mas não garante que o
-    manifesto resultante é válido.
-- [Kubeval](https://kubeval.instrumenta.dev/)
-  - Valida o schema e os tipos das chaves, mas não permite que sejam
-    criados _templating_.
-- [Jsonnet](https://jsonnet.org/), [ytt](https://get-ytt.io/)
-  - Apenas templating, sem validação.
+[Acessado em 2020-01-29](https://docs.dhall-lang.org/discussions/Dhall-in-production.html)
+
+- Advanced Telematic Systems GmbH
+- AlasConnect
+- Awake Security
+- Cachix
+- CircuitHub
+- Coralogix
 
 ##
 
-Usar uma combinação de Kustomize + Kubeval ?
-
-##
-
-Nenhuma das alternativas permite modularidade / uso de funções para
-não nos repetirmos.
+- Earnest Research
+- Formation
+- IOHK
+- Kos Media, LLC
+- KSF Media
+- Mira Networks
+- NoRedInk
