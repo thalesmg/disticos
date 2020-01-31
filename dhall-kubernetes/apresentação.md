@@ -54,7 +54,7 @@ let mkDeployment
 ### Parâmetros para o manifesto
 
 ```{.dhall}
--- dadosProd.dhall
+-- bifrostProd.dhall
 
 { env = "prod"
 , replicas = 2
@@ -65,7 +65,7 @@ let mkDeployment
 , address = "bifrost-prod.saopaulo.kube.xerpa.com.br"
 }
 
--- dadosStaging.dhall tem a mesma estrutura
+-- bifrostStaging.dhall, renminbiProd.dhall, ...
 ```
 
 ### Produzindo manifestos
@@ -157,3 +157,7 @@ envFrom:
 ## Relato
 
 https://christine.website/blog/dhall-kubernetes-2020-01-25
+
+## Tufe
+
+🍺
