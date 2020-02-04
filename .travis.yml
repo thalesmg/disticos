@@ -20,6 +20,8 @@ deploy:
  - provider: netlify
    edge: yes
    skip_cleanup: yes
+   on:
+     all_branches: yes
    auth:
      secure: "0vJMjQ1G7kq+DjSdfWBYGDTqp4lsAUDUP5wA9xMMGmH0l7PsFgnkdmxwgY14X60oqhjTw/lC2EZEPlk3Mc38pqL8VOrYqvc8W9IDF6cJphJtI3NEFnqW3CnJcMskhBvqqSuUllNuq9jXtie/9FElpSxKS2yTTLF/KrwPI6wtHJbLEDSzi7v9WLkDpJh5qDcsplzqUcTP9KZy/NeWw1SAKjsLFc5JvIV7Q9NoBKbIDbUHVo8Nd58ghPTRp6jji35iUJPHJGYkfIK2crXNwWJIS6i+xrQ4qqHJ2hnE3BnIoSeVlQOvTMCBIaUHjnZKSWfVqF0x9ZKJTrMCBZrv82lxXlkV9Z6K2IjUZRI55D2au3xrIBMCJh9ehwMoNrRdibuXvMJWYiM0GlW0Um/fX+qT4eAnM3fq3lgVufS+OhlwFIsF2YFFS7a6x2TjTicfakNf0DbkQE4NMtH3yhKF7lYl7bhcp9OeBbQauTrXj/q99OKXir5nS2LENZ+n4/DrQQkabpXp7TFOpjbgL/m2joKcR2J+iSFGfP15MP9liRcZKVCemQ6Z5EAQS++9991kazFl3Hl4iNaJGRumsAqa8uUOQ/mcJmDZcFZN6WY0UYio1a5jyYOf+P9gWumdrmNsPoRRm+rESYfw1Cf6IO9a2EUXePbdQhYpy6gW9MZTukW6jDA="
    site: silly-mahavira-78fd5f
