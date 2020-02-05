@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="generator" content="pandoc">
+  <meta name="author" content="Thales Macedo Garitezi">
+  <meta name="dcterms.date" content="2020-01-29">
+  <title>Dhall para Kubernetes</title>
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, minimal-ui">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@3.8.0/css/reset.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@3.8.0/css/reveal.css">
+  <style>
+      code{white-space: pre-wrap;}
+      span.smallcaps{font-variant: small-caps;}
+      span.underline{text-decoration: underline;}
+      div.column{display: inline-block; vertical-align: top; width: 50%;}
+  </style>
+  <style>
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+  </style>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@3.8.0/css/theme/black.css" id="theme">
+  <link rel="stylesheet" href="reveal_style.css"/>
+  <link rel="stylesheet" href="code_style.css"/>
+  <!-- Printing and PDF exports -->
+  <script>
+    var link = document.createElement( 'link' );
+    link.rel = 'stylesheet';
+    link.type = 'text/css';
+    link.href = window.location.search.match( /print-pdf/gi ) ? 'https://cdn.jsdelivr.net/npm/reveal.js@3.8.0/css/print/pdf.css' : 'https://cdn.jsdelivr.net/npm/reveal.js@3.8.0/css/print/paper.css';
+    document.getElementsByTagName( 'head' )[0].appendChild( link );
+  </script>
+  <!--[if lt IE 9]>
+  <script src="https://cdn.jsdelivr.net/npm/reveal.js@3.8.0/lib/js/html5shiv.js"></script>
+  <![endif]-->
+</head>
+<body>
+  <div class="reveal">
+    <div class="slides">
+
+<section id="title-slide">
+  <h1 class="title">Dhall para Kubernetes</h1>
+  <p class="author">Thales Macedo Garitezi</p>
+  <p class="date">2020-01-29</p>
+</section>
+<section id="TOC">
+<ul>
+<li><a href="#/problema">Problema</a></li>
+<li><a href="#/ferramentas-atuais">Ferramentas atuais</a></li>
+<li><a href="#/dhall">Dhall</a></li>
+<li><a href="#/dhall-em-produção">Dhall em Produção</a></li>
+</ul>
+</section>
+
+<section id="problema" class="title-slide slide level1"><h1>Problema</h1><ul>
+<li>Gerenciar um conjunto de manifestos Kubernetes
+<ul>
+<li>… para múltiplos ambientes</li>
+<li>… evitando copia/cola entre projetos</li>
+<li>… e checando que são válidos.</li>
+</ul></li>
+<li>É fácil errar escrevendo YAML manualmente (identação, typos nas chaves, tipos dos valores).</li>
+</ul></section>
+<section><section id="ferramentas-atuais" class="title-slide slide level1 small"><h1>Ferramentas atuais</h1><ul>
+<li><a href="https://github.com/cuelang/cue/blob/master/doc/tutorial/kubernetes/README.md">CUE</a>
+<ul>
+<li>Não tem os schemas prontos: precisa fazer manualmente.</li>
+</ul></li>
+<li><a href="https://helm.sh/">Helm</a>
+<ul>
+<li>Pressupõe que seu template (“<code>values.yml</code>”) esteja correto.</li>
+</ul></li>
+<li><a href="https://kustomize.io/">Kustomize</a>
+<ul>
+<li>Faz substituições <em>type safe</em> de variáveis, mas não garante que o manifesto resultante é válido.</li>
+</ul></li>
+<li><a href="https://kubeval.instrumenta.dev/">Kubeval</a>
+<ul>
+<li>Valida o schema e os tipos das chaves, mas não permite que sejam criados <em>templating</em>.</li>
+</ul></li>
+<li><a href="https://jsonnet.org/">Jsonnet</a>, <a href="https://get-ytt.io/">ytt</a>
+<ul>
+<li>Apenas templating, sem validação.</li>
+</ul></li>
+</ul></section><section id="section" class="title-slide slide level2"><h2></h2><p>Usar uma combinação de Kustomize + Kubeval ?</p></section><section id="porém" class="title-slide slide level2"><h2>Porém</h2><p>Nenhuma das alternativas anteriores permite modularidade / uso de funções para não nos repetirmos.</p></section></section>
+<section><section id="dhall" class="title-slide slide level1"><h1>Dhall</h1><ul>
+<li>Modularidade.</li>
+<li>Evita repetições.</li>
+<li>Não tem efeitos arbitrários.</li>
+</ul></section><section id="modularidade" class="title-slide slide level2"><h2>Modularidade</h2><pre class="dhall"><code>let mkDeployment
+    : Dados → kubernetes.Deployment.Type
+    =   λ(dados : Dados)
+      → kubernetes.Deployment::{ ... }</code></pre></section><section id="parâmetros-para-o-manifesto" class="slide level3">
+<h3>Parâmetros para o manifesto</h3>
+<pre class="dhall"><code>-- bifrostProd.dhall
+
+{ env = &quot;prod&quot;
+, replicas = 2
+, app = &quot;bifrost&quot;
+, image = env:CI_REGISTRY_IMAGE as Text
+, version = env:CI_COMMIT_REF_NAME as Text
+, mixEnv = &quot;prod&quot;
+, address = &quot;bifrost-prod.saopaulo.kube.xerpa.com.br&quot;
+}
+
+-- bifrostStaging.dhall, renminbiProd.dhall, ...</code></pre>
+</section><section id="produzindo-manifestos" class="slide level3">
+<h3>Produzindo manifestos</h3>
+<pre class="shell"><code>dhall-to-yaml &lt;&lt;&lt; &#39;./mkDeployment.dhall ./dadosProd.dhall&#39;
+dhall-to-yaml &lt;&lt;&lt; &#39;./mkDeployment.dhall ./dadosStaging.dhall&#39;</code></pre>
+</section><section id="evitando-repetições" class="title-slide slide level2"><h2>Evitando repetições</h2><div class="sourceCode" id="cb4"><pre class="sourceCode numberSource dhall number-lines"><code class="sourceCode"><span id="cb4-1"><a href="#cb4-1"></a>let envKeys = [&quot;prod-bifrost-database&quot;, ...]</span>
+<span id="cb4-2"><a href="#cb4-2"></a></span>
+<span id="cb4-3"><a href="#cb4-3"></a>let mkSecretRef</span>
+<span id="cb4-4"><a href="#cb4-4"></a>    : Text → kubernetes.EnvFromSource.Type</span>
+<span id="cb4-5"><a href="#cb4-5"></a>    =   λ(envKey : Text)</span>
+<span id="cb4-6"><a href="#cb4-6"></a>      → kubernetes.EnvFromSource::{</span>
+<span id="cb4-7"><a href="#cb4-7"></a>        , secretRef =</span>
+<span id="cb4-8"><a href="#cb4-8"></a>            { name =</span>
+<span id="cb4-9"><a href="#cb4-9"></a>                Some</span>
+<span id="cb4-10"><a href="#cb4-10"></a>                  &quot;${dados.env}-${dados.app}-${envKey}&quot;</span>
+<span id="cb4-11"><a href="#cb4-11"></a>            , optional = Some False</span>
+<span id="cb4-12"><a href="#cb4-12"></a>            }</span>
+<span id="cb4-13"><a href="#cb4-13"></a>        }</span></code></pre></div></section><section id="section-1" class="slide level3">
+<h3></h3>
+<div class="sourceCode" id="cb5"><pre class="sourceCode numberSource dhall number-lines"><code class="sourceCode"><span id="cb5-1"><a href="#cb5-1"></a>in  List/map</span>
+<span id="cb5-2"><a href="#cb5-2"></a>      Text</span>
+<span id="cb5-3"><a href="#cb5-3"></a>      kubernetes.EnvFromSource.Type</span>
+<span id="cb5-4"><a href="#cb5-4"></a>      mkSecretRef</span>
+<span id="cb5-5"><a href="#cb5-5"></a>      envKeys</span></code></pre></div>
+</section><section id="resultado" class="slide level3">
+<h3>Resultado</h3>
+<div class="sourceCode" id="cb6"><pre class="sourceCode numberSource yaml number-lines"><code class="sourceCode yaml"><span id="cb6-1"><a href="#cb6-1"></a><span class="fu">envFrom</span><span class="kw">:</span></span>
+<span id="cb6-2"><a href="#cb6-2"></a><span class="kw">-</span><span class="at"> </span><span class="fu">secretRef</span><span class="kw">:</span></span>
+<span id="cb6-3"><a href="#cb6-3"></a><span class="at">    </span><span class="fu">name</span><span class="kw">:</span><span class="at"> </span><span class="st">&quot;prod-bifrost-database&quot;</span></span>
+<span id="cb6-4"><a href="#cb6-4"></a><span class="at">    </span><span class="fu">optional</span><span class="kw">:</span><span class="at"> </span><span class="ch">false</span></span>
+<span id="cb6-5"><a href="#cb6-5"></a><span class="kw">-</span><span class="at"> </span><span class="fu">secretRef</span><span class="kw">:</span></span>
+<span id="cb6-6"><a href="#cb6-6"></a><span class="at">    </span><span class="fu">name</span><span class="kw">:</span><span class="at"> </span><span class="st">&quot;prod-bifrost-rabbitmq&quot;</span></span>
+<span id="cb6-7"><a href="#cb6-7"></a><span class="at">    </span><span class="fu">optional</span><span class="kw">:</span><span class="at"> </span><span class="ch">false</span></span>
+<span id="cb6-8"><a href="#cb6-8"></a><span class="kw">-</span><span class="at"> </span><span class="fu">secretRef</span><span class="kw">:</span></span>
+<span id="cb6-9"><a href="#cb6-9"></a><span class="at">    </span><span class="fu">name</span><span class="kw">:</span><span class="at"> </span><span class="st">&quot;prod-bifrost-appsignal&quot;</span></span>
+<span id="cb6-10"><a href="#cb6-10"></a><span class="at">    </span><span class="fu">optional</span><span class="kw">:</span><span class="at"> </span><span class="ch">false</span></span>
+<span id="cb6-11"><a href="#cb6-11"></a><span class="kw">-</span><span class="at"> </span><span class="fu">secretRef</span><span class="kw">:</span></span>
+<span id="cb6-12"><a href="#cb6-12"></a><span class="at">    </span><span class="fu">name</span><span class="kw">:</span><span class="at"> </span><span class="st">&quot;prod-bifrost-logstash&quot;</span></span>
+<span id="cb6-13"><a href="#cb6-13"></a><span class="at">    </span><span class="fu">optional</span><span class="kw">:</span><span class="at"> </span><span class="ch">false</span></span>
+<span id="cb6-14"><a href="#cb6-14"></a><span class="kw">-</span><span class="at"> </span><span class="fu">secretRef</span><span class="kw">:</span></span>
+<span id="cb6-15"><a href="#cb6-15"></a><span class="at">    </span><span class="fu">name</span><span class="kw">:</span><span class="at"> </span><span class="st">&quot;prod-bifrost-firebase&quot;</span></span>
+<span id="cb6-16"><a href="#cb6-16"></a><span class="at">    </span><span class="fu">optional</span><span class="kw">:</span><span class="at"> </span><span class="ch">false</span></span>
+<span id="cb6-17"><a href="#cb6-17"></a><span class="kw">-</span><span class="at"> </span><span class="fu">secretRef</span><span class="kw">:</span></span>
+<span id="cb6-18"><a href="#cb6-18"></a><span class="at">    </span><span class="fu">name</span><span class="kw">:</span><span class="at"> </span><span class="st">&quot;prod-bifrost-fitbank&quot;</span></span>
+<span id="cb6-19"><a href="#cb6-19"></a><span class="at">    </span><span class="fu">optional</span><span class="kw">:</span><span class="at"> </span><span class="ch">false</span></span>
+<span id="cb6-20"><a href="#cb6-20"></a><span class="kw">-</span><span class="at"> </span><span class="fu">secretRef</span><span class="kw">:</span></span>
+<span id="cb6-21"><a href="#cb6-21"></a><span class="at">    </span><span class="fu">name</span><span class="kw">:</span><span class="at"> </span><span class="st">&quot;prod-bifrost-env&quot;</span></span>
+<span id="cb6-22"><a href="#cb6-22"></a><span class="at">    </span><span class="fu">optional</span><span class="kw">:</span><span class="at"> </span><span class="ch">false</span></span>
+<span id="cb6-23"><a href="#cb6-23"></a><span class="kw">-</span><span class="at"> </span><span class="fu">secretRef</span><span class="kw">:</span></span>
+<span id="cb6-24"><a href="#cb6-24"></a><span class="at">    </span><span class="fu">name</span><span class="kw">:</span><span class="at"> </span><span class="st">&quot;prod-bifrost-btg&quot;</span></span>
+<span id="cb6-25"><a href="#cb6-25"></a><span class="at">    </span><span class="fu">optional</span><span class="kw">:</span><span class="at"> </span><span class="ch">false</span></span></code></pre></div>
+</section></section>
+<section><section id="dhall-em-produção" class="title-slide slide level1"><h1>Dhall em Produção</h1><p><a href="https://docs.dhall-lang.org/discussions/Dhall-in-production.html">Acessado em 2020-01-29</a></p>
+<ul>
+<li>Advanced Telematic Systems GmbH</li>
+<li>AlasConnect</li>
+<li>Awake Security</li>
+<li>Cachix</li>
+<li>CircuitHub</li>
+<li>Coralogix</li>
+</ul></section><section id="section-2" class="title-slide slide level2"><h2></h2><ul>
+<li>Earnest Research</li>
+<li>Formation</li>
+<li>IOHK</li>
+<li>Kos Media, LLC</li>
+<li>KSF Media</li>
+<li>Mira Networks</li>
+<li>NoRedInk</li>
+</ul></section><section id="relato" class="title-slide slide level2"><h2>Relato</h2><p>https://christine.website/blog/dhall-kubernetes-2020-01-25</p></section><section id="tufe" class="title-slide slide level2"><h2>Tufe</h2><p>🍺</p></section></section>
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/reveal.js@3.8.0/js/reveal.js"></script>
+
+  <script>
+
+      // Full list of configuration options available at:
+      // https://github.com/hakimel/reveal.js#configuration
+      Reveal.initialize({
+        // Push each slide change to the browser history
+        history: true,
+        math: {
+          mathjax: 'https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.2/MathJax.js',
+          config: 'TeX-AMS_HTML-full',
+          tex2jax: {
+            inlineMath: [['\\(','\\)']],
+            displayMath: [['\\[','\\]']],
+            balanceBraces: true,
+            processEscapes: false,
+            processRefs: true,
+            processEnvironments: true,
+            preview: 'TeX',
+            skipTags: ['script','noscript','style','textarea','pre','code'],
+            ignoreClass: 'tex2jax_ignore',
+            processClass: 'tex2jax_process'
+          },
+        },
+
+        // Optional reveal.js plugins
+        dependencies: [
+          { src: 'https://cdn.jsdelivr.net/npm/reveal.js@3.8.0/lib/js/classList.js', condition: function() { return !document.body.classList; } },
+          { src: 'https://cdn.jsdelivr.net/npm/reveal.js@3.8.0/plugin/zoom-js/zoom.js', async: true },
+          { src: 'https://cdn.jsdelivr.net/npm/reveal.js@3.8.0/plugin/math/math.js', async: true },
+          { src: 'https://cdn.jsdelivr.net/npm/reveal.js@3.8.0/plugin/notes/notes.js', async: true }
+        ]
+      });
+    </script>
+    </body>
+</html>
