@@ -5,8 +5,6 @@ script:
   - cp -r ./result/* ./dist
   - rm ./result
 
-blah: FIXME
-
 deploy:
   - provider: pages:git
     edge: true
