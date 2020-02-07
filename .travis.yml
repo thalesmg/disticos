@@ -2,7 +2,9 @@ language: nix
 script:
   - nix-build release.nix
   - mkdir -p ./dist
+  - mkdir -p ./fns
   - cp -r ./result/* ./dist
+  - cp ./netlify/fns/* ./fns
   - rm ./result
 
 deploy:
@@ -25,7 +27,7 @@ deploy:
     site: a1558d73-d6e5-4050-92cd-12a8828235af
     prod: no
     dir: ./dist/
-    functions: ./netlify/fns/
+    functions: ./fns/
 
   - provider: netlify
     edge: yes
