@@ -25,6 +25,7 @@ deploy:
     site: a1558d73-d6e5-4050-92cd-12a8828235af
     prod: no
     dir: ./dist/
+    functions: ./netlify/fns/
 
   - provider: netlify
     edge: yes
