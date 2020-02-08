@@ -4,6 +4,7 @@ script:
   - nix-build functions.nix -o functions
   - mkdir -p ./dist
   - mkdir -p ./fns
+  - ls -la ./dist ./fns
   - cp -r ./result/* ./dist
   - cp ./functions/bin/* ./fns/
   - rm ./result
