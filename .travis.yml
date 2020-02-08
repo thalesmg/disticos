@@ -6,7 +6,7 @@ script:
   - mkdir -p ./fns
   - ls -la ./dist ./fns
   - cp -r ./result/* ./dist
-  - cp ./functions/bin/* ./fns/
+  - cp ./functions/bin/lambda-functions ./fns/main
   - cp ./netlify/fns/teste.js ./fns/
   - rm ./result
   - rm ./functions
