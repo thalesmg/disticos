@@ -1,11 +1,13 @@
 language: nix
 script:
   - nix-build release.nix
+  - nix-build functions.nix -o functions
   - mkdir -p ./dist
   - mkdir -p ./fns
   - cp -r ./result/* ./dist
-  - cp ./netlify/fns/* ./fns
+  - cp ./functions/bin/* ./fns/
   - rm ./result
+  - rm ./functions
 
 deploy:
   - provider: pages:git
@@ -39,6 +41,3 @@ deploy:
     site: a1558d73-d6e5-4050-92cd-12a8828235af
     prod: yes
     dir: ./dist/
-
-after_deploy:
-  - python3 --version
