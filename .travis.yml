@@ -5,7 +5,6 @@ script:
   - mkdir -p ./dist
   - mkdir -p ./fns
   - ls -la ./dist ./fns
-  - timeout 2 ./functions/bin/lambda-functions
   - cp -r ./result/* ./dist
   - cp ./functions/bin/* ./fns/
   - cp ./netlify/fns/teste.js ./fns/
