@@ -9,6 +9,7 @@ script:
   - cachix use thalesmg
   - if [ -n "$CACHIX_SIGNING_KEY" ]; then cachix push thalesmg --watch-store; fi &
   - nix-build release.nix
+  - ./heartbeat.sh &
   - nix-build functions.nix -o functions 2>/dev/null
   - mkdir -p ./dist
   - mkdir -p ./fns
