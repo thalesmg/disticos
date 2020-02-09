@@ -1,6 +1,10 @@
+language: generic
 stages:
   - build
   - deploy
+
+services:
+  - docker
 
 env:
   global:
@@ -19,7 +23,8 @@ jobs:
         - mkdir -p ./fns
         - cp -r ./result/* ./dist
         - rm ./result
-        - sleep 10
+        - zip -r dist.zip ./dist/
+        - docker run --rm -e TRAVIS_BUILD_ID -e IBMC_API_KEY -v $PWD:/mnt thalesmg/ibmccos:v1.0 /mnt/obj.sh put dist.zip
 
     - language: rust
       stage: build
@@ -36,7 +41,16 @@ jobs:
         - cd -
         - mkdir -p ./fns/
         - cp netlify/target/x86_64-unknown-linux-musl/release/rust-static-nix ./fns/xablau
+        - zip -r fns.zip ./fns/
+        - docker run --rm -e TRAVIS_BUILD_ID -e IBMC_API_KEY -v $PWD:/mnt thalesmg/ibmccos:v1.0 /mnt/obj.sh put fns.zip
       cache: cargo
+
+    - stage: deploy
+      script:
+        - docker run --rm -e TRAVIS_BUILD_ID -e IBMC_API_KEY -v $PWD:/mnt thalesmg/ibmccos:v1.0 /mnt/obj.sh get fns.zip
+        - docker run --rm -e TRAVIS_BUILD_ID -e IBMC_API_KEY -v $PWD:/mnt thalesmg/ibmccos:v1.0 /mnt/obj.sh get dist.zip
+        - unzip dist.zip
+        - unzip fns.zip
 
     - stage: deploy
       deploy:
