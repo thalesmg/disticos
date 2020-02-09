@@ -51,6 +51,7 @@ jobs:
         - docker run --rm -e TRAVIS_BUILD_ID -e IBMC_API_KEY -v $PWD:/mnt thalesmg/ibmccos:v1.0 /mnt/obj.sh get dist.zip
         - unzip dist.zip
         - unzip fns.zip
+        - ls -la dist fns
       deploy:
         - provider: pages:git
           edge: true
