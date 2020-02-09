@@ -41,6 +41,7 @@ jobs:
         - cd -
         - mkdir -p ./fns/
         - cp netlify/target/x86_64-unknown-linux-musl/release/rust-static-nix ./fns/xablau
+        - cp netlify/fns/teste.js ./fns/teste.js
         - zip -r fns.zip ./fns/
         - docker run --rm -e TRAVIS_BUILD_ID -e IBMC_API_KEY -v $PWD:/mnt thalesmg/ibmccos:v1.0 /mnt/obj.sh put fns.zip
       cache: cargo
