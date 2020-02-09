@@ -1,5 +1,9 @@
 language: nix
 
+stages:
+  - build
+  - deploy
+
 env:
   global:
     secure: Q0luGKQ5nDPHART1RiXiL7PkOiT3laAdRzzKX7mkNP0jRzcTHZwiW3A0tcq+G0yB9pmoI+XhXFt+Q2beVT0WmFSP6PrgH91p7nTO4NNbmk8x2w9bjEAgjJ+6WHBGScfCdTdZp8Tr/ZqAkoc9O5gEjQzkyZjCcUtKr7C37zAjXfARdxSjv7omH1jiQXY581jVFmNdrw+QMx/BxWBhLpUKSRJTtu28H8haejiXAVtI6h1sW/scY2blR702TEfYSudgYx8az70BJT+nMKoOdBWAwfg/wfu51WP6s9flIzidwp3CzfQUfDXB5a8EDyPgU+Anb4+pW3nNY/pj6PsZK7kyY2y7Xg76PjgrJnHxpjjX2P9bnQ9+DOh14LLv+XdeHR5rvjUYGG9PV1ZXRD86vB8LNTXgNYVfqRmuT4zZzM8O7iIq7njxnc0iJiyyJZbAMZ9JnF278uWWbXKJmcKaZhYmd3fc3mSM5GzUgBSDS5nw2YsX002VFzPy1ljOmmcG/3zPqy3TxHpPFtMlCZ1zIkyoyPkDFEk17XM0iaxT2VtXvhj/vAvkfKP/Pbi7HOR3mOx7/j5/HCnZ6kk5h6L4ykBBC0Ciho8WGQJIL9wo0UtQuAi+PizwNmqpg+Wz0w+4co+dFguW7v/i8AlAWC7B1kS87vXWibi1qsaH+C3VlF9t0zw=
@@ -7,6 +11,7 @@ env:
 jobs:
   include:
     - language: nix
+      stage: build
       script:
         - nix-env -iA cachix -f https://cachix.org/api/v1/install
         - cachix use thalesmg
@@ -18,6 +23,7 @@ jobs:
         - rm ./result
         - sleep 10
     - language: rust
+      stage: build
       rust: stable
       addons:
         apt:
@@ -55,6 +61,7 @@ jobs:
 
 deploy:
   - provider: pages:git
+    stage: deploy
     edge: true
     skip_cleanup: true
     on:
@@ -64,6 +71,7 @@ deploy:
       secure: IsttZaz7j8pAvBGsuGxytnHuQ6D8CXV9vXhZ0UO12MwieEAnpJqWeU3Spk6oQ+cJXkxktA8REtW8j9l29W74pvd2LJkyeF4brb8pRO0XghY+kkxnc8BtacjRQ6eqtZlpxOGrSYN/5eOFb7e1vQqzNjb7c91Snlo08nEc3+5srxbIKc4+9gHN0IhB8DU2Iy2VvW7tt/7TLkec4DOHWnmh1TK/+dRYG6g9+DwNOiRnqLaj3nl/awU3Od5lM0yi+htZht/9wwnbELDkHt6yBu7/DE5rtW2VZo+qjoebWNgrJwjtuymN41xTztkwR5KNUgVvQGm1zSpMkhkDzwIAg7YDakHoSSBBflLPxs3KTN3ALilvNmaUJnLl/+BsbTFbyu3YpxExOY9p0TNVmXR+73Yo/eG3ilCFxxguH+7cMjHXhBvJ99FFKcm3M2aWUgJ8ndQ/7Effo3SSHKth/vE6Q5BfLCqrSQnI9pjlCkPCu+fAAGJ9yV/VOQGuUp/VYD7neSWgc7trMKFmBEIR4RcZl/Guz+wgkqECCCLCeSxQCcISm2UB1MTdDSxwMX5Js5mKLG2sj+7FBG9gSnsbLteDFYc0ZDYBq+V1VX3W3Pkjp2dVMTwsO4WXTfpANOOOuFXwjf95avz5AYFiLeZggsm9KPC6LDl2RHM8cRfs/uRtCirWjFw=
 
   - provider: netlify
+    stage: deploy
     edge: yes
     skip_cleanup: yes
     on:
@@ -76,6 +84,7 @@ deploy:
     functions: ./fns/
 
   - provider: netlify
+    stage: deploy
     edge: yes
     skip_cleanup: yes
     on:
