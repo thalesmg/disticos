@@ -29,6 +29,7 @@ jobs:
         - cd netlify
         - cargo build --target x86_64-unknown-linux-musl --release
         - cd -
+        - mkdir -p ./fns/
         - cp netlify/target/x86_64-unknown-linux-musl/release/rust-static-nix ./fns/xablau
       cache: cargo
 
