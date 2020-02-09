@@ -18,6 +18,6 @@ case "$1" in
     ibmcloud cos get-object \
       --bucket baldinho-cos-standard-ozm \
       --key "$TRAVIS_BUILD_ID/$2" \
-      --body "$2"
+      "$2"
     ;;
 esac
