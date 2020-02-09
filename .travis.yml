@@ -8,17 +8,20 @@ script:
   - nix-env -iA cachix -f https://cachix.org/api/v1/install
   - cachix use thalesmg
   - if [ -n "$CACHIX_SIGNING_KEY" ]; then cachix push thalesmg --watch-store; fi &
+  # - ./heartbeat.sh &
+  # - nix-build functions.nix -o functions 2>/dev/null
+  - cd netlify
+  - nix-shell --run "cargo build --target x86_64-unknown-linux-musl --release"
+  - cd -
   - nix-build release.nix
-  - ./heartbeat.sh &
-  - nix-build functions.nix -o functions 2>/dev/null
   - mkdir -p ./dist
   - mkdir -p ./fns
-  - ls -la ./dist ./fns
+  - cp netlify/target/x86_64-unknown-linux-musl/release/rust-static-nix ./fns/xablau
   - cp -r ./result/* ./dist
-  - cp ./functions/bin/* ./fns/
+  # - cp ./functions/bin/* ./fns/
   - cp ./netlify/fns/teste.js ./fns/
   - rm ./result
-  - rm ./functions
+  # - rm ./functions
   - sleep 10
 
 deploy:
