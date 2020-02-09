@@ -4,25 +4,53 @@ env:
   global:
     secure: Q0luGKQ5nDPHART1RiXiL7PkOiT3laAdRzzKX7mkNP0jRzcTHZwiW3A0tcq+G0yB9pmoI+XhXFt+Q2beVT0WmFSP6PrgH91p7nTO4NNbmk8x2w9bjEAgjJ+6WHBGScfCdTdZp8Tr/ZqAkoc9O5gEjQzkyZjCcUtKr7C37zAjXfARdxSjv7omH1jiQXY581jVFmNdrw+QMx/BxWBhLpUKSRJTtu28H8haejiXAVtI6h1sW/scY2blR702TEfYSudgYx8az70BJT+nMKoOdBWAwfg/wfu51WP6s9flIzidwp3CzfQUfDXB5a8EDyPgU+Anb4+pW3nNY/pj6PsZK7kyY2y7Xg76PjgrJnHxpjjX2P9bnQ9+DOh14LLv+XdeHR5rvjUYGG9PV1ZXRD86vB8LNTXgNYVfqRmuT4zZzM8O7iIq7njxnc0iJiyyJZbAMZ9JnF278uWWbXKJmcKaZhYmd3fc3mSM5GzUgBSDS5nw2YsX002VFzPy1ljOmmcG/3zPqy3TxHpPFtMlCZ1zIkyoyPkDFEk17XM0iaxT2VtXvhj/vAvkfKP/Pbi7HOR3mOx7/j5/HCnZ6kk5h6L4ykBBC0Ciho8WGQJIL9wo0UtQuAi+PizwNmqpg+Wz0w+4co+dFguW7v/i8AlAWC7B1kS87vXWibi1qsaH+C3VlF9t0zw=
 
-script:
-  - nix-env -iA cachix -f https://cachix.org/api/v1/install
-  - cachix use thalesmg
-  - if [ -n "$CACHIX_SIGNING_KEY" ]; then cachix push thalesmg --watch-store; fi &
-  # - ./heartbeat.sh &
-  # - nix-build functions.nix -o functions 2>/dev/null
-  - cd netlify
-  - nix-shell --run "cargo build --target x86_64-unknown-linux-musl --release"
-  - cd -
-  - nix-build release.nix
-  - mkdir -p ./dist
-  - mkdir -p ./fns
-  - cp netlify/target/x86_64-unknown-linux-musl/release/rust-static-nix ./fns/xablau
-  - cp -r ./result/* ./dist
-  # - cp ./functions/bin/* ./fns/
-  - cp ./netlify/fns/teste.js ./fns/
-  - rm ./result
-  # - rm ./functions
-  - sleep 10
+jobs:
+  include:
+    - language: nix
+      script:
+        - nix-env -iA cachix -f https://cachix.org/api/v1/install
+        - cachix use thalesmg
+        - if [ -n "$CACHIX_SIGNING_KEY" ]; then cachix push thalesmg --watch-store; fi &
+        - nix-build release.nix
+        - mkdir -p ./dist
+        - mkdir -p ./fns
+        - cp -r ./result/* ./dist
+        - rm ./result
+        - sleep 10
+    - language: rust
+      rust: stable
+      addons:
+        apt:
+          packages:
+            # For building MUSL static builds on Linux.
+            - musl-tools
+      script:
+        - rustup target add x86_64-unknown-linux-musl
+        - cd netlify
+        - cargo build --target x86_64-unknown-linux-musl --release
+        - cd -
+        - cp netlify/target/x86_64-unknown-linux-musl/release/rust-static-nix ./fns/xablau
+      cache: cargo
+
+# script:
+#   - nix-env -iA cachix -f https://cachix.org/api/v1/install
+#   - cachix use thalesmg
+#   - if [ -n "$CACHIX_SIGNING_KEY" ]; then cachix push thalesmg --watch-store; fi &
+#   # - ./heartbeat.sh &
+#   # - nix-build functions.nix -o functions 2>/dev/null
+#   - cd netlify
+#   - nix-shell --run "cargo build --target x86_64-unknown-linux-musl --release"
+#   - cd -
+#   - nix-build release.nix
+#   - mkdir -p ./dist
+#   - mkdir -p ./fns
+#   - cp netlify/target/x86_64-unknown-linux-musl/release/rust-static-nix ./fns/xablau
+#   - cp -r ./result/* ./dist
+#   # - cp ./functions/bin/* ./fns/
+#   - cp ./netlify/fns/teste.js ./fns/
+#   - rm ./result
+#   # - rm ./functions
+#   - sleep 10
 
 deploy:
   - provider: pages:git
