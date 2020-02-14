@@ -144,11 +144,19 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <ul>
 <li>Apenas templating, sem validação.</li>
 </ul></li>
-</ul></section><section id="section" class="title-slide slide level2"><h2></h2><p>Usar uma combinação de Kustomize + Kubeval ?</p></section><section id="porém" class="title-slide slide level2"><h2>Porém</h2><p>Nenhuma das alternativas anteriores permite modularidade / uso de funções para não nos repetirmos.</p></section></section>
+</ul></section><section id="section" class="title-slide slide level2"><h2></h2><p>Usar uma combinação de Kustomize + Kubeval ?</p></section><section id="porém" class="title-slide slide level2"><h2>Porém</h2><p>Nenhuma das alternativas anteriores permite modularidade / uso de funções para não nos repetirmos.</p></section><section id="usar---dry-run--server-dry-run" class="title-slide slide level2"><h2>Usar <code>--dry-run/--server-dry-run</code></h2><ul>
+<li>Funciona, mas…
+<ul>
+<li>… requer acesso direto a um cluster (acesso liberado a todos os devs?);</li>
+<li>… ainda precisa de outra ferramenta para auxiliar na construção correta de YAML;</li>
+<li>… também não resolve o problema da modularidade.</li>
+</ul></li>
+</ul></section></section>
 <section><section id="dhall" class="title-slide slide level1"><h1>Dhall</h1><ul>
 <li>Modularidade.</li>
 <li>Evita repetições.</li>
 <li>Não tem efeitos arbitrários.</li>
+<li>Não depende de acesso ao cluster de Kubernetes.</li>
 </ul></section><section id="modularidade" class="title-slide slide level2"><h2>Modularidade</h2><pre class="dhall"><code>let mkDeployment
     : Dados → kubernetes.Deployment.Type
     =   λ(dados : Dados)
