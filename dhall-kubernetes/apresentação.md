@@ -36,11 +36,19 @@ Usar uma combinação de Kustomize + Kubeval ?
 Nenhuma das alternativas anteriores permite modularidade / uso de
 funções para não nos repetirmos.
 
+## Usar `--dry-run/--server-dry-run`
+
+- Funciona, mas...
+  - ... requer acesso direto a um cluster (acesso liberado a todos os devs?);
+  - ... ainda precisa de outra ferramenta para auxiliar na construção correta de YAML;
+  - ... também não resolve o problema da modularidade.
+
 # Dhall
 
 - Modularidade.
 - Evita repetições.
 - Não tem efeitos arbitrários.
+- Não depende de acesso ao cluster de Kubernetes.
 
 ## Modularidade
 
