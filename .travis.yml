@@ -42,6 +42,7 @@ jobs:
         - mkdir -p ./fns/
         - cp netlify/target/x86_64-unknown-linux-musl/release/rust-static-nix ./fns/xablau
         - cp netlify/fns/teste.js ./fns/teste.js
+        - cp netlify/fns/package.json ./fns/package.json
         - zip -r fns.zip ./fns/
         - docker run --rm -e TRAVIS_BUILD_ID -e IBMC_API_KEY -v $PWD:/mnt thalesmg/ibmccos:v1.0 /mnt/obj.sh put fns.zip
       cache: cargo
@@ -53,6 +54,9 @@ jobs:
         - unzip dist.zip
         - unzip fns.zip
         - ls -la dist fns
+        - cd fns
+        - docker run --rm -v $PWD:/home/node/app -w /home/node/app node:12-alpine npm install
+        - cd ..
       deploy:
         - provider: pages:git
           edge: true
